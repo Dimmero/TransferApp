@@ -22,7 +22,9 @@ public class CycleForTransfer {
     public void getCycle(String serviceTag, Company fromCompany, Company toCompany) {
         try {
             transferWarrantyPage.passServiceTagAndGoToTheNextPage(serviceTag);
-            previousOwnerForm.fillForm(fromCompany);
+            if (previousOwnerForm.fillForm(fromCompany)) {
+                return;
+            }
             newOwnerForm.fillForm(toCompany);
         } catch (Exception l) {
             System.out.println(serviceTag + "has already been done");
