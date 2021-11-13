@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.stream.IntStream;
 
 public class ServiceTagParsing {
-    public static ArrayList<String> listOfServiceTags = new ArrayList<>();
-    public static HashMap<Integer, String> mapOfServiceTags = new HashMap<>();
+    private final ArrayList<String> listOfServiceTags = new ArrayList<>();
+    private final HashMap<Integer, String> mapOfServiceTags = new HashMap<>();
 
     public ArrayList<String> trimStringToServiceTags(JTextArea textArea) {
         if (!textArea.getText().isEmpty()) {
@@ -26,7 +26,7 @@ public class ServiceTagParsing {
         return listOfServiceTags;
     }
 
-    public static HashMap<Integer, String> getMapOfServiceTags(ArrayList<String> list) {
+    public HashMap<Integer, String> getMapOfServiceTags(ArrayList<String> list) {
         IntStream.range(0, list.size())
                 .forEach(index -> {
                     mapOfServiceTags.put(index, list.get(index));

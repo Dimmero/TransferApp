@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class MainWindow extends BaseWindow {
-    private final String URL_TRANSFER = "https://www.dell.com/support/assets-transfer/pl-pl";
-    private final String URL_STATS = "https://www.dell.com/support/home/pl-pl?app=products";
-
     private JTextArea serviceTagText;
     private JScrollPane scrollBar;
     private JButton generateFile;
@@ -43,8 +40,8 @@ public class MainWindow extends BaseWindow {
     static JRadioButton radioButtonAddToCompany;
     private final ArrayList<JRadioButton> fromList;
     private final ArrayList<JRadioButton> toList;
-    public CycleForStats stats;
-    public ServiceTagParsing tagParsing = new ServiceTagParsing();
+    private ArrayList<String> listOfServiceTags;
+    private CycleForStats stats;
 
     public MainWindow() {
         super();
@@ -57,66 +54,38 @@ public class MainWindow extends BaseWindow {
         setAllButtons();
         addToFromList();
         addToToList();
+        addAllElementsToPanel();
 
-        generateFile.addActionListener(e -> {
-            try {
-                String companyName = getCheckedCompany(fromList).getName();
-                OutputToExcel outputToExcel = new OutputToExcel(companyName);
-                outputToExcel.generateExcelWithTags(tagParsing.trimStringToServiceTags(serviceTagText));
-            } catch (IOException fileNotFoundException) {
-                fileNotFoundException.printStackTrace();
-            }
+        submitTransfer.addActionListener(e -> {
+            Company previousOwner = getCheckedCompany(fromList);
+            Company newOwner = getCheckedCompany(toList);
+            CycleForTransfer cycle = new CycleForTransfer();
+            cycle.getCycle(getListOfServiceTags(), previousOwner, newOwner);
+            confirmTransferredTags(newOwner);
+            clearListAndTextArea();
         });
 
         generateStats.addActionListener(e -> {
-            try {
-                tagParsing = new ServiceTagParsing();
-                String company = getCheckedCompany(fromList).getName();
-                stats = new CycleForStats(company);
-                stats.getCycleForStatistics(tagParsing.trimStringToServiceTags(serviceTagText));
-                SeleniumDriver.driver.quit();
-                ServiceTagParsing.listOfServiceTags.clear();
-                serviceTagText.setText("");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            String company = getCheckedCompany(fromList).getName();
+            stats = new CycleForStats(company);
+            stats.getCycleForStatistics(getListOfServiceTags());
+            clearListAndTextArea();
+        });
+
+        generateFile.addActionListener(e -> {
+            String companyName = getCheckedCompany(fromList).getName();
+            OutputToExcel outputToExcel = new OutputToExcel(companyName);
+            outputToExcel.generateExcelWithTags(getListOfServiceTags());
         });
 
         radioButtonAddFromCompany.addActionListener(e -> {
-            NewCompanyWindow newCompanyWindow = new NewCompanyWindow();
-            try {
-                newCompanyWindow.createNewCompanyWindow(newCompanyWindow, radioButtonAddFromCompany);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            NewCompanyWindow newFromCompanyWindow = new NewCompanyWindow();
+            newFromCompanyWindow.createNewCompanyWindow(radioButtonAddFromCompany);
         });
 
         radioButtonAddToCompany.addActionListener(e -> {
-            NewCompanyWindow newCompanyWindow = new NewCompanyWindow();
-            try {
-                newCompanyWindow.createNewCompanyWindow(newCompanyWindow, radioButtonAddToCompany);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        submitTransfer.addActionListener(e -> {
-            tagParsing = new ServiceTagParsing();
-            Company previousOwner = getCheckedCompany(fromList);
-            Company newOwner = getCheckedCompany(toList);
-            ArrayList<String> listOfServiceTags = tagParsing.trimStringToServiceTags(serviceTagText);
-            CycleForTransfer cycle = new CycleForTransfer();
-            SeleniumDriver.initDriver();
-            listOfServiceTags
-                    .forEach(tag -> {
-                        SeleniumDriver.openNewTab(URL_TRANSFER);
-                        cycle.getCycle(tag, previousOwner, newOwner);
-                        SeleniumDriver.closeDriver();
-                    });
-            SeleniumDriver.driver.quit();
-            success.setText(listOfServiceTags + " have been successfully transferred to " + newOwner.getName());
-            listOfServiceTags.clear();
-            serviceTagText.setText("");
+            NewCompanyWindow newToCompanyWindow = new NewCompanyWindow();
+            newToCompanyWindow.createNewCompanyWindow(radioButtonAddToCompany);
         });
     }
 
@@ -194,31 +163,30 @@ public class MainWindow extends BaseWindow {
         generateStats.setBounds(350, 50, 100, 25);
     }
 
-    public void addAllElementsToPanel(MainWindow mainWindow) {
-        mainWindow.getPanel().add(scrollBar);
-        mainWindow.getPanel().add(serviceTagLabel);
-        mainWindow.getPanel().add(previousOwnerLabel);
-        mainWindow.getPanel().add(newOwnerLabel);
-
-        mainWindow.getPanel().add(radioButtonLaptok1);
-        mainWindow.getPanel().add(radioButtonBufo1);
-        mainWindow.getPanel().add(radioButtonEco1);
-        mainWindow.getPanel().add(radioButtonMax1);
-        mainWindow.getPanel().add(radioButtonDeane1);
-        mainWindow.getPanel().add(radioButtonCommonwealth1);
-        mainWindow.getPanel().add(radioButtonLaptok2);
-        mainWindow.getPanel().add(radioButtonBufo2);
-        mainWindow.getPanel().add(radioButtonEco2);
-        mainWindow.getPanel().add(radioButtonMax2);
-        mainWindow.getPanel().add(radioButtonDeane2);
-        mainWindow.getPanel().add(radioButtonCommonwealth2);
-        mainWindow.getPanel().add(radioButtonAddFromCompany);
-        mainWindow.getPanel().add(radioButtonAddToCompany);
-        mainWindow.getPanel().add(submitTransfer);
-        mainWindow.getPanel().add(success);
-        mainWindow.getPanel().add(generateFile);
-        mainWindow.getPanel().add(generateStats);
-        mainWindow.getFrame().setVisible(true);
+    public void addAllElementsToPanel() {
+        getPanel().add(scrollBar);
+        getPanel().add(serviceTagLabel);
+        getPanel().add(previousOwnerLabel);
+        getPanel().add(newOwnerLabel);
+        getPanel().add(radioButtonLaptok1);
+        getPanel().add(radioButtonBufo1);
+        getPanel().add(radioButtonEco1);
+        getPanel().add(radioButtonMax1);
+        getPanel().add(radioButtonDeane1);
+        getPanel().add(radioButtonCommonwealth1);
+        getPanel().add(radioButtonLaptok2);
+        getPanel().add(radioButtonBufo2);
+        getPanel().add(radioButtonEco2);
+        getPanel().add(radioButtonMax2);
+        getPanel().add(radioButtonDeane2);
+        getPanel().add(radioButtonCommonwealth2);
+        getPanel().add(radioButtonAddFromCompany);
+        getPanel().add(radioButtonAddToCompany);
+        getPanel().add(submitTransfer);
+        getPanel().add(success);
+        getPanel().add(generateFile);
+        getPanel().add(generateStats);
+        getFrame().setVisible(true);
     }
 
     private Map<JRadioButton, Company> getMapOfButtonsAndCompanies(List<JRadioButton> list) {
@@ -236,7 +204,7 @@ public class MainWindow extends BaseWindow {
                 .stream()
                 .filter(entry -> entry.getKey().isSelected())
                 .findAny()
-                .get()
+                .orElseThrow()
                 .getValue();
     }
 
@@ -260,4 +228,16 @@ public class MainWindow extends BaseWindow {
         toList.add(radioButtonAddToCompany);
     }
 
+    private void confirmTransferredTags(Company newOwner) {
+        success.setText(listOfServiceTags + " have been successfully transferred to " + newOwner.getName());
+    }
+
+    private ArrayList<String> getListOfServiceTags() {
+        return listOfServiceTags = new ServiceTagParsing().trimStringToServiceTags(serviceTagText);
+    }
+
+    private void clearListAndTextArea() {
+        listOfServiceTags.clear();
+        serviceTagText.setText("");
+    }
 }

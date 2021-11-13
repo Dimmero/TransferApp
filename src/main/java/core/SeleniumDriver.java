@@ -9,16 +9,32 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class SeleniumDriver {
-    public static WebDriver driver = new ChromeDriver();
-    public static WebDriverWait wait;
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    public static void initDriver() {
-        System.setProperty("webdriver.chrome.driver", "C:\\webdriver\\chromedriver.exe");
-        driver.manage().window().setSize(new Dimension(500, 800));
-        wait = new WebDriverWait(driver, 5);
+    public SeleniumDriver() {
+        this.driver = new ChromeDriver();
+        this.wait = new WebDriverWait(driver, 5);
     }
 
-    public static void openNewTab(String url) {
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public WebDriverWait getWait() {
+        return wait;
+    }
+
+    public void quitDriver() {
+        driver.quit();
+    }
+
+    public void initDriver() {
+        System.setProperty("webdriver.chrome.driver", "C:\\webdriver\\chromedriver.exe");
+        driver.manage().window().setSize(new Dimension(500, 800));
+    }
+
+    public void openNewTab(String url) {
         String URL_TRANSFER = "'" + url + "'";
         String jsScript = "window.open(" + URL_TRANSFER + ", '_blank');";
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -27,15 +43,19 @@ public class SeleniumDriver {
         driver.switchTo().window(tabs.get(1));
     }
 
-    public static void waitForSelect() {
-        driver.manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+    public void waitForSelect() {
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     }
 
-    public static void waitForElement(By locator) {
+    public void waitForElementVisibility(By locator) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public static void closeDriver() {
+    public void waitForElementToBeClickable(By locator) {
+        wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    public void closeDriver() {
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.close();
         driver.switchTo().window(tabs.get(0));

@@ -6,7 +6,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class DellLoginPage extends TransferWarrantyPage  {
+public class DellLoginPage  {
+    public SeleniumDriver driver;
+
     @FindBy(id = "inpEntrySelection")
     public WebElement inputServiceTag;
 
@@ -22,16 +24,15 @@ public class DellLoginPage extends TransferWarrantyPage  {
     @FindBy(id = "countryLabel")
     public WebElement countryLabel;
 
-    public DellLoginPage() {
-        PageFactory.initElements(SeleniumDriver.driver, this);
+    public DellLoginPage(SeleniumDriver driver) {
+        this.driver = driver;
+        PageFactory.initElements(driver.getDriver(), this);
     }
 
-    @Override
     public void setServiceTag(WebElement element, String tag) {
         element.sendKeys(tag);
     }
 
-    @Override
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
         setServiceTag(inputServiceTag, serviceTag);
         inputServiceTag.sendKeys(Keys.ENTER);;

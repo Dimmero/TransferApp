@@ -5,11 +5,10 @@ import core.SeleniumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import pages.TransferWarrantyPage;
 
-public class NewOwnerForm {
+public class NewOwnerForm extends TransferWarrantyPage {
     private final String USAGE = "2_Office";
 
     @FindBy(id = "ddlIntendedUse")
@@ -33,9 +32,6 @@ public class NewOwnerForm {
     @FindBy(id = "txtNewOwnerCity")
     public WebElement newOwnerCity;
 
-    @FindBy(id = "txtNewOwnerStreetAddress1")
-    public WebElement companyAddress;
-
     @FindBy(id = "txtNewOwnerZipCode")
     public WebElement newOwnerZipCode;
 
@@ -45,7 +41,7 @@ public class NewOwnerForm {
     @FindBy(id = "txtNewOwnerPhone")
     public WebElement newOwnerTelNumber;
 
-    @FindBy(id = "retailOT_spanContinueButton")
+    @FindBy(id = "retailOT_btnContinue")
     public WebElement submitNewOwner;
 
     @FindBy(id = "btnNewOwnerModelContinue")
@@ -57,53 +53,46 @@ public class NewOwnerForm {
     @FindBy(id = "retailOT_spanSubmitButton")
     public WebElement submitButton;
 
-    public NewOwnerForm() {
-        PageFactory.initElements(SeleniumDriver.driver, this);
+    public NewOwnerForm(SeleniumDriver driver) {
+        super(driver);
     }
 
     public void fillForm(Company company) {
-        SeleniumDriver.waitForElement(By.id("ddlIntendedUse"));
-        SeleniumDriver.waitForSelect();
+        driver.waitForSelect();
         select(selectUsage, USAGE);
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerCompanyName"));
-//        JavascriptExecutor js = (JavascriptExecutor) SeleniumDriver.driver;
-//        String newName = (String) js.executeScript("return document.getElementById('txtNewOwnerCompanyName').value");
-//        if (!newName.isEmpty()) {
-//            submitForm();
-//            return;
-//        }
+        driver.waitForElementVisibility(By.id("txtNewOwnerCompanyName"));
         newOwnerName.sendKeys(company.getName());
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerEmail"));
+        driver.waitForElementVisibility(By.id("txtNewOwnerEmail"));
         newOwnerEmail.sendKeys(company.getEmail());
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerStreetAddress1"));
-        newOwnerAddress.sendKeys(company.getAddress());
-        SeleniumDriver.waitForElement(By.id("ddlNewOwnerLocation"));
+        driver.waitForElementVisibility(By.id("ddlNewOwnerLocation"));
         select(selectCountry, company.getCountry());
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerCity"));
+        driver.waitForElementVisibility(By.id("txtNewOwnerStreetAddress1"));
+        newOwnerAddress.sendKeys(company.getAddress());
+        driver.waitForElementVisibility(By.id("txtNewOwnerCity"));
         newOwnerCity.sendKeys(company.getCity());
-        SeleniumDriver.waitForElement(By.id("ddlNewOwnerState"));
+        driver.waitForElementVisibility(By.id("ddlNewOwnerState"));
         select(selectState, company.getState());
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerZipCode"));
+        driver.waitForElementVisibility(By.id("txtNewOwnerZipCode"));
         newOwnerZipCode.sendKeys(company.getZipCode());
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerAreaCode"));
+        driver.waitForElementVisibility(By.id("txtNewOwnerAreaCode"));
         newOwnerAreaCode.sendKeys(company.getPrefixNumber());
-        SeleniumDriver.waitForElement(By.id("txtNewOwnerPhone"));
+        driver.waitForElementVisibility(By.id("txtNewOwnerPhone"));
         newOwnerTelNumber.sendKeys(company.getTelNumber());
         submitForm();
     }
 
-    private void select(WebElement select, String value) {
-        Select usage = new Select(select);
-        usage.selectByValue(value);
+    private void select(WebElement element, String value) {
+        Select select = new Select(element);
+        select.selectByValue(value);
     }
 
     public void submitForm() {
-        SeleniumDriver.waitForElement(By.id("retailOT_spanContinueButton"));
+        driver.waitForElementVisibility(By.id("retailOT_btnContinue"));
         submitNewOwner.click();
-        SeleniumDriver.wait.until(ExpectedConditions.elementToBeClickable(By.id("btnNewOwnerModelContinue")));
+        driver.waitForElementVisibility(By.id("btnNewOwnerModelContinue"));
         continueForm.click();
         submitCheckbox.click();
-        SeleniumDriver.wait.until(ExpectedConditions.elementToBeClickable(By.id("retailOT_spanSubmitButton")));
+        driver.waitForElementVisibility(By.id("retailOT_spanSubmitButton"));
         submitButton.click();
     }
 }

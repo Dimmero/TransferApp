@@ -2,35 +2,46 @@ package cycles;
 
 import core.SeleniumDriver;
 import entities.Company;
+import forms.Cookies;
 import forms.NewOwnerForm;
 import forms.PreviousOwnerForm;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import pages.TransferWarrantyPage;
 
+import java.util.ArrayList;
+
 public class CycleForTransfer {
+    private final String URL_TRANSFER = "https://www.dell.com/support/assets-transfer/pl-pl";
+    private SeleniumDriver driver;
     private TransferWarrantyPage transferWarrantyPage;
     private PreviousOwnerForm previousOwnerForm;
     private NewOwnerForm newOwnerForm;
+    private Cookies cookies;
 
     public CycleForTransfer() {
-        this.transferWarrantyPage = new TransferWarrantyPage();
-        this.previousOwnerForm = new PreviousOwnerForm();
-        this.newOwnerForm = new NewOwnerForm();
+        this.driver = new SeleniumDriver();
+        driver.initDriver();
+        this.transferWarrantyPage = new TransferWarrantyPage(driver);
+        this.previousOwnerForm = new PreviousOwnerForm(driver);
+        this.newOwnerForm = new NewOwnerForm(driver);
+        this.cookies = new Cookies(driver);
     }
 
-    public void getCycle(String serviceTag, Company fromCompany, Company toCompany) {
-        try {
-            transferWarrantyPage.passServiceTagAndGoToTheNextPage(serviceTag);
-            if (previousOwnerForm.fillForm(fromCompany)) {
-                return;
+    public SeleniumDriver getDriver() {
+        return driver;
+    }
+
+    public void getCycle(ArrayList<String> list, Company fromCompany, Company toCompany) {
+        list.forEach(tag -> {
+            driver.openNewTab(URL_TRANSFER);
+            transferWarrantyPage.passServiceTagAndGoToTheNextPage(tag);
+            cookies.turnOffCookies();
+            if (!previousOwnerForm.tagIsAlreadyTransferred()) {
+                previousOwnerForm.fillForm(fromCompany);
+                newOwnerForm.fillForm(toCompany);
             }
-            newOwnerForm.fillForm(toCompany);
-        } catch (Exception l) {
-            System.out.println(serviceTag + "has already been done");
-        }
+            driver.closeDriver();
+        });
+        driver.quitDriver();
     }
-
-
 }
 

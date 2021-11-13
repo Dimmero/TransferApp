@@ -3,44 +3,58 @@ package cycles;
 import core.OutputToExcel;
 import core.SeleniumDriver;
 import entities.Company;
+import forms.Cookies;
+import org.openqa.selenium.By;
 import pages.DellLoginPage;
 import pages.WarrantyInfoPage;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class CycleForStats {
-    private final DellLoginPage dellLoginPage;
+    private final String URL_STATS = "https://www.dell.com/support/home/pl-pl?app=products";
+    private SeleniumDriver driver;
     private final OutputToExcel outputToExcel;
+    private final DellLoginPage dellLoginPage;
     private final WarrantyInfoPage warrantyInfoPage;
+    private final Cookies cookies;
 
-    public CycleForStats(String company) throws FileNotFoundException {
-        this.dellLoginPage = new DellLoginPage();
+    public CycleForStats(String company)  {
+        this.driver = new SeleniumDriver();
+        driver.initDriver();
+        this.dellLoginPage = new DellLoginPage(driver);
         this.outputToExcel = new OutputToExcel(company);
-        this.warrantyInfoPage = new WarrantyInfoPage();
+        this.warrantyInfoPage = new WarrantyInfoPage(driver);
+        this.cookies = new Cookies(driver);
     }
 
-    public void getCycleForStatistics(ArrayList<String> list) throws IOException {
+    public SeleniumDriver getDriver() {
+        return driver;
+    }
+
+    public void getCycleForStatistics(ArrayList<String> list)  {
         for (int i = 0; i < list.size(); i++) {
-            SeleniumDriver.initDriver();
-            SeleniumDriver.openNewTab("https://www.dell.com/support/home/pl-pl?app=products");
+            driver.openNewTab(URL_STATS);
             dellLoginPage.passServiceTagAndGoToTheNextPage(list.get(i));
-            if (warrantyInfoIsNotAvailable()) {
-                outputToExcel.createRowAndSetCell(i, 1, list.get(i));
-            } else {
-                outputToExcel.getStatistics(i, list.get(i), warrantyInfoPage);
-                SeleniumDriver.closeDriver();
-            }
+            cookies.turnOffCookies();
+            outputToExcel.getStatistics(i, list.get(i), warrantyInfoPage);
+            driver.closeDriver();
         }
         outputToExcel.writeToFile();
+        driver.quitDriver();
     }
 
-    public boolean warrantyInfoIsNotAvailable() {
-        String NOT_AVAILABLE = "Info is not available";
-        return warrantyInfoPage.getInlineWarrantyText().contains(NOT_AVAILABLE);
+    public void turnOffCookies() {
+        try {
+            driver.getDriver().findElement(By.xpath("//a[@aria-label='allow cookies']")).click();
+            System.out.println("accepted");
+        } catch (Exception o) {
+            System.out.println("no stupid cookies, go further");
+        }
     }
+
 }
-
 
 
 //Model name output

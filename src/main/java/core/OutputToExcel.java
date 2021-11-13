@@ -10,17 +10,21 @@ import pages.WarrantyInfoPage;
 
 public class OutputToExcel {
     private final HSSFWorkbook WORKBOOK;
-    private final FileOutputStream OUTPUT_STREAM;
+    private FileOutputStream OUTPUT_STREAM;
     private final HSSFSheet SHEET;
     private String company;
 
-    public OutputToExcel(String company) throws FileNotFoundException {
+    public OutputToExcel(String company)  {
         WORKBOOK = new HSSFWorkbook();
-        OUTPUT_STREAM = new FileOutputStream("C:\\Users\\Dimmer\\Desktop\\Warranty(copy)\\" + company + ".xlsx");
+        try {
+            OUTPUT_STREAM = new FileOutputStream("C:\\Users\\Dimmer\\Desktop\\Warranty(copy)\\" + company + ".xlsx");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         SHEET = WORKBOOK.createSheet("Tags");
     }
 
-    public void generateExcelWithTags(List<String> list) throws IOException {
+    public void generateExcelWithTags(List<String> list) {
         for (int index = 0; index < list.size(); index++) {
             HSSFRow row = SHEET.createRow(index);
             row.createCell(0).setCellValue(list.get(index));
@@ -29,7 +33,9 @@ public class OutputToExcel {
     }
 
     public void getStatistics(int rowCount, String tag, WarrantyInfoPage warrantyInfoPage){
-            HSSFRow row = SHEET.createRow(rowCount);
+            HSSFRow rowForFiltering = SHEET.createRow(0);
+            HSSFRow row = SHEET.createRow(rowCount + 1);
+            rowForFiltering.createCell(0);
             row.createCell(0).setCellValue(tag);
             row.createCell(1).setCellValue(warrantyInfoPage.getWarrantyInfo());
             row.createCell(2).setCellValue(warrantyInfoPage.getCountryLabel());
@@ -40,10 +46,22 @@ public class OutputToExcel {
         row.createCell(cell).setCellValue(data);
     }
 
-    public void writeToFile() throws IOException {
-        WORKBOOK.write(OUTPUT_STREAM);
-        WORKBOOK.close();
-        OUTPUT_STREAM.close();
+    public void writeToFile() {
+        try {
+            WORKBOOK.write(OUTPUT_STREAM);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            WORKBOOK.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            OUTPUT_STREAM.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

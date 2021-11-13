@@ -4,9 +4,8 @@ import core.SeleniumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
-public class WarrantyInfoPage {
+public class WarrantyInfoPage extends DellLoginPage {
     @FindBy(id = "ps-inlineWarranty")
     public WebElement inlineWarranty;
 
@@ -19,23 +18,23 @@ public class WarrantyInfoPage {
     @FindBy(id = "countryLabel")
     public WebElement countryLabel;
 
-    public WarrantyInfoPage() {
-        PageFactory.initElements(SeleniumDriver.driver, this);
+    public WarrantyInfoPage(SeleniumDriver driver) {
+        super(driver);
     }
 
     public String getInlineWarrantyText() {
-        SeleniumDriver.waitForElement(By.id("ps-inlineWarranty"));
+        driver.waitForElementToBeClickable(By.id("ps-inlineWarranty"));
         return inlineWarranty.getText();
     }
 
     public String getWarrantyInfo() {
-        SeleniumDriver.waitForElement(By.xpath("//div[@id='warranty-card']//p[contains(@class,'h5 mt-lg-1')]"));
+        driver.waitForElementToBeClickable(By.xpath("//div[@id='warranty-card']//p[contains(@class,'h5 mt-lg-1')]"));
         return warrantyInfo.getText();
     }
 
     public String getCountryLabel() {
         expandInfo.click();
-        SeleniumDriver.waitForElement(By.id("countryLabel"));
+        driver.waitForElementToBeClickable(By.id("countryLabel"));
         return countryLabel.getText();
     }
 }
