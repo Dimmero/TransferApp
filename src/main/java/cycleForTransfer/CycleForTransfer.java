@@ -1,11 +1,7 @@
-package cycles;
+package cycleForTransfer;
 
 import core.SeleniumDriver;
 import entities.Company;
-import forms.Cookies;
-import forms.NewOwnerForm;
-import forms.PreviousOwnerForm;
-import pages.TransferWarrantyPage;
 
 import java.util.ArrayList;
 
@@ -33,8 +29,10 @@ public class CycleForTransfer {
     public void getCycle(ArrayList<String> list, Company fromCompany, Company toCompany) {
         list.forEach(tag -> {
             driver.openNewTab(URL_TRANSFER);
+            if (tag.indexOf(tag) == 0) {
+                cookies.turnOffCookies();
+            }
             transferWarrantyPage.passServiceTagAndGoToTheNextPage(tag);
-            cookies.turnOffCookies();
             if (!previousOwnerForm.tagIsAlreadyTransferred()) {
                 previousOwnerForm.fillForm(fromCompany);
                 newOwnerForm.fillForm(toCompany);

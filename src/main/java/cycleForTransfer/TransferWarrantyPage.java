@@ -1,4 +1,4 @@
-package pages;
+package cycleForTransfer;
 
 import core.SeleniumDriver;
 import org.openqa.selenium.By;
@@ -9,22 +9,19 @@ import org.openqa.selenium.support.PageFactory;
 
 public class TransferWarrantyPage  {
     public SeleniumDriver driver;
+
     @FindBy(id = "OTST_txtSTag1")
-    private WebElement inputServiceTag;
+    public WebElement inputServiceTag;
+    public By inputServiceTagID = By.id("OTST_txtSTag1");
 
     public TransferWarrantyPage(SeleniumDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver.getDriver(), this);
     }
 
-    public void setServiceTag(WebElement element, String tag) {
-        driver.waitForElementVisibility(By.id("OTST_txtSTag1"));
-        element.sendKeys(tag);
-    }
-
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        setServiceTag(inputServiceTag, serviceTag);
+        driver.waitForElementVisibility(inputServiceTagID);
+        inputServiceTag.sendKeys(serviceTag);
         inputServiceTag.sendKeys(Keys.ENTER);
     }
-
 }

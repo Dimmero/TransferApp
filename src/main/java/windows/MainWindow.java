@@ -1,15 +1,13 @@
 package windows;
 
-import cycles.CycleForStats;
-import cycles.CycleForTransfer;
+import cycleForStats.CycleForStats;
+import cycleForTransfer.CycleForTransfer;
 import core.*;
 import entities.Company;
 import entities.ListOfCompanies;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -52,9 +50,9 @@ public class MainWindow extends BaseWindow {
     public void createMainWindow() {
         getPanelForWindow();
         setAllButtons();
+        addAllElementsToPanel();
         addToFromList();
         addToToList();
-        addAllElementsToPanel();
 
         submitTransfer.addActionListener(e -> {
             Company previousOwner = getCheckedCompany(fromList);
@@ -192,9 +190,7 @@ public class MainWindow extends BaseWindow {
     private Map<JRadioButton, Company> getMapOfButtonsAndCompanies(List<JRadioButton> list) {
         Map<JRadioButton, Company> map = new LinkedHashMap<>();
         IntStream.range(0, ListOfCompanies.companyList.size())
-                .forEach(index -> {
-                    map.put(list.get(index), ListOfCompanies.companyList.get(index));
-                });
+                .forEach(index -> map.put(list.get(index), ListOfCompanies.companyList.get(index)));
         return map;
     }
 

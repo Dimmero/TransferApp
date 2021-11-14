@@ -51,10 +51,6 @@ public class SeleniumDriver {
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public void waitForElementToBeClickable(By locator) {
-        wait.until(ExpectedConditions.elementToBeClickable(locator));
-    }
-
     public void closeDriver() {
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.close();

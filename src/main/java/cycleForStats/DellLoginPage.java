@@ -1,4 +1,4 @@
-package pages;
+package cycleForStats;
 
 import core.SeleniumDriver;
 import org.openqa.selenium.Keys;
@@ -12,18 +12,6 @@ public class DellLoginPage  {
     @FindBy(id = "inpEntrySelection")
     public WebElement inputServiceTag;
 
-    @FindBy(id = "ps-inlineWarranty")
-    public WebElement inlineWarranty;
-
-    @FindBy(xpath = "//div[@id='warranty-card']//p[contains(@class,'h5 mt-lg-1')]")
-    public WebElement warrantyInfo;
-
-    @FindBy(xpath = "//p[@class='mb-0 ml-3 ']//a")
-    public WebElement expandWarrantyInfo;
-
-    @FindBy(id = "countryLabel")
-    public WebElement countryLabel;
-
     public DellLoginPage(SeleniumDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver.getDriver(), this);
@@ -35,6 +23,6 @@ public class DellLoginPage  {
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
         setServiceTag(inputServiceTag, serviceTag);
-        inputServiceTag.sendKeys(Keys.ENTER);;
+        inputServiceTag.sendKeys(Keys.ENTER);
     }
 }

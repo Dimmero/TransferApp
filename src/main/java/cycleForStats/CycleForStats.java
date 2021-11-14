@@ -1,26 +1,21 @@
-package cycles;
+package cycleForStats;
 
 import core.OutputToExcel;
 import core.SeleniumDriver;
-import entities.Company;
-import forms.Cookies;
+import cycleForTransfer.Cookies;
 import org.openqa.selenium.By;
-import pages.DellLoginPage;
-import pages.WarrantyInfoPage;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class CycleForStats {
-    private final String URL_STATS = "https://www.dell.com/support/home/pl-pl?app=products";
-    private SeleniumDriver driver;
+    public final String URL_STATS = "https://www.dell.com/support/home/pl-pl?app=products";
+    public SeleniumDriver driver;
     private final OutputToExcel outputToExcel;
     private final DellLoginPage dellLoginPage;
     private final WarrantyInfoPage warrantyInfoPage;
     private final Cookies cookies;
 
-    public CycleForStats(String company)  {
+    public CycleForStats(String company) {
         this.driver = new SeleniumDriver();
         driver.initDriver();
         this.dellLoginPage = new DellLoginPage(driver);
@@ -33,27 +28,19 @@ public class CycleForStats {
         return driver;
     }
 
-    public void getCycleForStatistics(ArrayList<String> list)  {
-        for (int i = 0; i < list.size(); i++) {
+    public void getCycleForStatistics(ArrayList<String> list) {
+        list.forEach(tag -> {
             driver.openNewTab(URL_STATS);
-            dellLoginPage.passServiceTagAndGoToTheNextPage(list.get(i));
+            dellLoginPage.passServiceTagAndGoToTheNextPage(tag);
+            if (tag.indexOf(tag) == 0) {
             cookies.turnOffCookies();
-            outputToExcel.getStatistics(i, list.get(i), warrantyInfoPage);
+            }
+            outputToExcel.getStatistics(tag.indexOf(tag), tag, warrantyInfoPage);
             driver.closeDriver();
-        }
+        });
         outputToExcel.writeToFile();
         driver.quitDriver();
     }
-
-    public void turnOffCookies() {
-        try {
-            driver.getDriver().findElement(By.xpath("//a[@aria-label='allow cookies']")).click();
-            System.out.println("accepted");
-        } catch (Exception o) {
-            System.out.println("no stupid cookies, go further");
-        }
-    }
-
 }
 
 
@@ -98,14 +85,7 @@ public class CycleForStats {
 //            System.out.println("Something went wrong");
 //        }
 //    }
-//
-//    public static void turnOffCookies(WebDriver driver) {
-//        try {
-//            driver.findElement(By.xpath("//div[@class='cc-compliance cc-highlight cc-regular']/a[@aria-label='allow cookies']")).click();
-//            System.out.println("accepted");
-//        } catch (Exception o) {
-//            System.out.println("no stupid cookies, go further");
-//        }
+
 
 
 
