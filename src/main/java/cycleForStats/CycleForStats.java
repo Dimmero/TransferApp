@@ -32,7 +32,7 @@ public class CycleForStats {
         list.forEach(tag -> {
             driver.openNewTab(URL_STATS);
             dellLoginPage.passServiceTagAndGoToTheNextPage(tag);
-            if (tag.indexOf(tag) == 0) {
+            if (list.indexOf(tag) == 0) {
             cookies.turnOffCookies();
             }
             outputToExcel.getStatistics(tag.indexOf(tag), tag, warrantyInfoPage);

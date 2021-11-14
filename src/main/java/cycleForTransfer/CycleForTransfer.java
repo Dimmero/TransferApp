@@ -29,7 +29,7 @@ public class CycleForTransfer {
     public void getCycle(ArrayList<String> list, Company fromCompany, Company toCompany) {
         list.forEach(tag -> {
             driver.openNewTab(URL_TRANSFER);
-            if (tag.indexOf(tag) == 0) {
+            if (list.indexOf(tag) == 0) {
                 cookies.turnOffCookies();
             }
             transferWarrantyPage.passServiceTagAndGoToTheNextPage(tag);
