@@ -38,11 +38,7 @@ public class PreviousOwnerForm extends TransferWarrantyPage {
 
     public boolean tagIsAlreadyTransferred() {
         driver.waitForElementVisibility(countryLabelID);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        driver.waitForCountryCheck();
         String option = (String)((JavascriptExecutor) driver.getDriver()).executeScript("return document.getElementById('ddlLocation').value");
         return option.contains(COUNTRY_POLAND);
     }

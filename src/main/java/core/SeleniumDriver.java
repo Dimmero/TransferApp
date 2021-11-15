@@ -56,4 +56,12 @@ public class SeleniumDriver {
         driver.close();
         driver.switchTo().window(tabs.get(0));
     }
+
+    public void waitForCountryCheck() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
