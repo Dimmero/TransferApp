@@ -44,7 +44,7 @@ public class SeleniumDriver {
     }
 
     public void waitForSelect() {
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
     }
 
     public void waitForElementVisibility(By locator) {
