@@ -64,10 +64,14 @@ public class MainWindow extends BaseWindow {
         });
 
         generateStats.addActionListener(e -> {
-            String company = getCheckedCompany(fromList).getName();
-            stats = new CycleForStats(company);
-            stats.getCycleForStatistics(getListOfServiceTags());
-            clearListAndTextArea();
+            try {
+                String company = getCheckedCompany(fromList).getName();
+                stats = new CycleForStats(company);
+                stats.getCycleForStatistics(getListOfServiceTags());
+                clearListAndTextArea();
+            } catch (NoSuchElementException exception) {
+                success.setText("Please choose the company from the first column!");
+            }
         });
 
         generateFile.addActionListener(e -> {

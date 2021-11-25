@@ -7,11 +7,11 @@ import java.util.ArrayList;
 
 public class CycleForTransfer {
     private final String URL_TRANSFER = "https://www.dell.com/support/assets-transfer/pl-pl";
-    private SeleniumDriver driver;
-    private TransferWarrantyPage transferWarrantyPage;
-    private PreviousOwnerForm previousOwnerForm;
-    private NewOwnerForm newOwnerForm;
-    private Cookies cookies;
+    private final SeleniumDriver driver;
+    private final TransferWarrantyPage transferWarrantyPage;
+    private final PreviousOwnerForm previousOwnerForm;
+    private final NewOwnerForm newOwnerForm;
+    private final Cookies cookies;
 
     public CycleForTransfer() {
         this.driver = new SeleniumDriver();
