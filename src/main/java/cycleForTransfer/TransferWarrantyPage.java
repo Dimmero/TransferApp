@@ -21,7 +21,6 @@ public class TransferWarrantyPage  {
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
         driver.waitForElementAndSendKeys(inputServiceTagID, serviceTag);
-//        inputServiceTag.sendKeys(serviceTag);
         inputServiceTag.sendKeys(Keys.ENTER);
     }
 }

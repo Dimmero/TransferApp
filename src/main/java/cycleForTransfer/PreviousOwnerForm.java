@@ -9,19 +9,10 @@ import org.openqa.selenium.support.FindBy;
 
 public class PreviousOwnerForm extends TransferWarrantyPage {
     public final String COUNTRY_POLAND = "PL";
-    public By countryLabelID = By.id("ddlLocation");
-
-    @FindBy(id = "txtCompanyName")
-    public WebElement companyName;
-    public By companyNameID = By.id("txtCompanyName");
-
-    @FindBy(id = "txtZipcode")
-    public WebElement companyZipCode;
-    public By companyZipCodeID = By.id("txtZipcode");
-
-    @FindBy(id = "retailOT_spanContinueButton")
-    public WebElement submitButton;
-    public By submitButtonID = By.id("retailOT_spanContinueButton");
+    private final By countryLabelID = By.id("ddlLocation");
+    private final By companyNameID = By.id("txtCompanyName");
+    private final By companyZipCodeID = By.id("txtZipcode");
+    private final By submitButtonID = By.id("retailOT_spanContinueButton");
 
     public PreviousOwnerForm(SeleniumDriver driver) {
         super(driver);
