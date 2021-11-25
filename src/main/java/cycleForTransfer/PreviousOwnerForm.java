@@ -28,12 +28,9 @@ public class PreviousOwnerForm extends TransferWarrantyPage {
     }
 
     public void fillForm(Company company) {
-        driver.waitForElementVisibility(companyNameID);
-        companyName.sendKeys(company.getName());
-        driver.waitForElementVisibility(companyZipCodeID);
-        companyZipCode.sendKeys(company.getZipCode());
-        driver.waitForElementVisibility(submitButtonID);
-        submitButton.click();
+        driver.waitForElementAndSendKeys(companyNameID, company.getName());
+        driver.waitForElementAndSendKeys(companyZipCodeID, company.getZipCode());
+        driver.waitForElementAndClick(submitButtonID);
     }
 
     public boolean tagIsAlreadyTransferred() {

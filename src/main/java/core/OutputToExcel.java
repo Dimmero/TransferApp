@@ -33,17 +33,16 @@ public class OutputToExcel {
     }
 
     public void getStatistics(int rowCount, String tag, WarrantyInfoPage warrantyInfoPage){
+        if (rowCount == 0) {
             HSSFRow rowForFiltering = SHEET.createRow(0);
-            HSSFRow row = SHEET.createRow(rowCount + 1);
             rowForFiltering.createCell(0);
+        }
+            HSSFRow row = SHEET.createRow(rowCount + 1);
             row.createCell(0).setCellValue(tag);
-            row.createCell(1).setCellValue(warrantyInfoPage.getWarrantyInfo());
-            row.createCell(2).setCellValue(warrantyInfoPage.getCountryLabel());
-    }
-
-    public void createRowAndSetCell(int rowCount, int cell, String data) {
-        HSSFRow row = SHEET.createRow(rowCount);
-        row.createCell(cell).setCellValue(data);
+            row.createCell(1).setCellValue(warrantyInfoPage.getCountryLabel());
+            row.createCell(2).setCellValue(warrantyInfoPage.getWarrantyExpiresInfo());
+//      JavaScript implementation(slower)
+//             row.createCell(2).setCellValue(warrantyInfoPage.getCountryName());
     }
 
     public void writeToFile() {

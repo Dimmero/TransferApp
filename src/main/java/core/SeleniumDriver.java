@@ -51,6 +51,18 @@ public class SeleniumDriver {
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
+    public String waitForElementAndGetText(By locator) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
+    }
+
+    public void waitForElementAndClick(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).click();
+    }
+
+    public void waitForElementAndSendKeys(By locator, String key) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).sendKeys(key);
+    }
+
     public void closeDriver() {
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.close();

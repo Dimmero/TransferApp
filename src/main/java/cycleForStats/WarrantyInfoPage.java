@@ -2,41 +2,41 @@ package cycleForStats;
 
 import core.SeleniumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class WarrantyInfoPage extends DellLoginPage {
-    @FindBy(id = "ps-inlineWarranty")
-    public WebElement inlineWarranty;
-
-    @FindBy(xpath = "//div[@id='warranty-card']//p[contains(@class,'h5 mt-lg-1')]")
-    public WebElement warrantyInfo;
-    public By warrantyInfoXpath = By.xpath("//div[@id='warranty-card']//p[contains(@class,'h5 mt-lg-1')]");
-
     @FindBy(xpath = "//p[@class='mb-0 ml-3 ']//a")
     public WebElement expandInfo;
+    public By expandInfoXpath = By.xpath("//p[@class='mb-0 ml-3 ']//a");
 
-    @FindBy(id = "countryLabel")
+    @FindBy(xpath = "//div[@id='countryLabel']//div")
     public WebElement countryLabel;
-    public By countryLabelID = By.id("countryLabel");
+    public By countryLabelXpath = By.xpath("//div[@id='countryLabel']//div");
+
+    @FindBy(xpath = "//div[contains(@class, \"px-0 col-md-3\")]//*[last()]")
+    public WebElement warrantyExpiresLabel;
+    public By warrantyExpiresLabelXpath = By.xpath("//div[contains(@class, 'px-0 col-md-3')]//*[last()]");
 
     public WarrantyInfoPage(SeleniumDriver driver) {
         super(driver);
     }
 
-    public String getInlineWarrantyText() {
-        driver.waitForElementVisibility(By.id("ps-inlineWarranty"));
-        return inlineWarranty.getText();
-    }
-
-    public String getWarrantyInfo() {
-        driver.waitForElementVisibility(warrantyInfoXpath);
-        return warrantyInfo.getText();
-    }
-
     public String getCountryLabel() {
+        driver.waitForElementVisibility(expandInfoXpath);
         expandInfo.click();
-        driver.waitForElementVisibility(countryLabelID);
-        return countryLabel.getText();
+        return driver.waitForElementAndGetText(countryLabelXpath);
+    }
+
+    public String getWarrantyExpiresInfo() {
+        return driver.waitForElementAndGetText(warrantyExpiresLabelXpath);
+    }
+
+    public String getCountryName() {
+        String scriptForCountryName = "return document.evaluate(\"//div[@id='countryLabel']//div\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerText";
+        ((JavascriptExecutor) driver.getDriver()).executeScript("$(\"a:contains('Wyświetl szczegóły')\").trigger(\"click\")");
+        driver.waitForElementVisibility(countryLabelXpath);
+        return (String)((JavascriptExecutor) driver.getDriver()).executeScript(scriptForCountryName);
     }
 }

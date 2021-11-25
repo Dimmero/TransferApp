@@ -35,7 +35,7 @@ public class CycleForStats {
             if (list.indexOf(tag) == 0) {
             cookies.turnOffCookies();
             }
-            outputToExcel.getStatistics(tag.indexOf(tag), tag, warrantyInfoPage);
+            outputToExcel.getStatistics(list.indexOf(tag), tag, warrantyInfoPage);
             driver.closeDriver();
         });
         outputToExcel.writeToFile();
