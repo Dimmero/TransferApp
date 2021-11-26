@@ -22,6 +22,8 @@ public class MainWindow extends BaseWindow {
     private JLabel previousOwnerLabel;
     private JLabel newOwnerLabel;
     private JLabel success;
+    private ButtonGroup fromCompanies;
+    private ButtonGroup toCompanies;
     private JRadioButton radioButtonLaptok1;
     private JRadioButton radioButtonLaptok2;
     private JRadioButton radioButtonBufo1;
@@ -55,12 +57,16 @@ public class MainWindow extends BaseWindow {
         addToToList();
 
         submitTransfer.addActionListener(e -> {
+            try {
             Company previousOwner = getCheckedCompany(fromList);
             Company newOwner = getCheckedCompany(toList);
             CycleForTransfer cycle = new CycleForTransfer();
             cycle.getCycle(getListOfServiceTags(), previousOwner, newOwner);
             confirmTransferredTags(newOwner);
             clearListAndTextArea();
+            } catch (NoSuchElementException exception) {
+                success.setText("Please choose previous owner and new owner from columns for transfer!");
+            }
         });
 
         generateStats.addActionListener(e -> {
@@ -68,6 +74,7 @@ public class MainWindow extends BaseWindow {
                 String company = getCheckedCompany(fromList).getName();
                 stats = new CycleForStats(company);
                 stats.getCycleForStatistics(getListOfServiceTags());
+                confirmFileStats();
                 clearListAndTextArea();
             } catch (NoSuchElementException exception) {
                 success.setText("Please choose the company from the first column!");
@@ -130,6 +137,15 @@ public class MainWindow extends BaseWindow {
         radioButtonAddFromCompany = new JRadioButton("Add new");
         radioButtonAddFromCompany.setBounds(10, 280, 100, 25);
 
+        fromCompanies = new ButtonGroup();
+        fromCompanies.add(radioButtonLaptok1);
+        fromCompanies.add(radioButtonBufo1);
+        fromCompanies.add(radioButtonEco1);
+        fromCompanies.add(radioButtonMax1);
+        fromCompanies.add(radioButtonDeane1);
+        fromCompanies.add(radioButtonCommonwealth1);
+        fromCompanies.add(radioButtonAddFromCompany);
+
         radioButtonLaptok2 = new JRadioButton("Laptokcom");
         radioButtonLaptok2.setBounds(120, 100, 100, 25);
 
@@ -150,6 +166,15 @@ public class MainWindow extends BaseWindow {
 
         radioButtonAddToCompany = new JRadioButton("Add new");
         radioButtonAddToCompany.setBounds(120, 280, 100, 25);
+
+        toCompanies = new ButtonGroup();
+        toCompanies.add(radioButtonLaptok2);
+        toCompanies.add(radioButtonBufo2);
+        toCompanies.add(radioButtonEco2);
+        toCompanies.add(radioButtonMax2);
+        toCompanies.add(radioButtonDeane2);
+        toCompanies.add(radioButtonCommonwealth2);
+        toCompanies.add(radioButtonAddToCompany);
 
         submitTransfer = new JButton("Submit");
         submitTransfer.setBounds(10, 310, 210, 25);
@@ -230,6 +255,10 @@ public class MainWindow extends BaseWindow {
 
     private void confirmTransferredTags(Company newOwner) {
         success.setText(listOfServiceTags + " have been successfully transferred to " + newOwner.getName());
+    }
+
+    private void confirmFileStats() {
+        success.setText("The file with statistics has been successfully created");
     }
 
     private ArrayList<String> getListOfServiceTags() {

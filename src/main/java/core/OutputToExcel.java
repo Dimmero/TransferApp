@@ -35,7 +35,9 @@ public class OutputToExcel {
     public void getStatistics(int rowCount, String tag, WarrantyInfoPage warrantyInfoPage){
         if (rowCount == 0) {
             HSSFRow rowForFiltering = SHEET.createRow(0);
-            rowForFiltering.createCell(0);
+            rowForFiltering.createCell(0).setCellValue("Service tag:");
+            rowForFiltering.createCell(1).setCellValue("Country:");
+            rowForFiltering.createCell(2).setCellValue("Warranty expires:");
         }
             HSSFRow row = SHEET.createRow(rowCount + 1);
             row.createCell(0).setCellValue(tag);
