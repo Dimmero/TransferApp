@@ -20,7 +20,7 @@ public class TransferWarrantyPage  {
     }
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        driver.waitForElementAndSendKeys(inputServiceTagID, serviceTag);
-        inputServiceTag.sendKeys(Keys.ENTER);
+        driver.waitForElementVisibility(inputServiceTagID);
+        inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
     }
 }
