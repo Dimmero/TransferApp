@@ -65,7 +65,7 @@ public class MainWindow extends BaseWindow {
             confirmTransferredTags(newOwner);
             clearListAndTextArea();
             } catch (NoSuchElementException exception) {
-                success.setText("Please choose previous owner and new owner from columns for transfer!");
+                success.setText("Please choose the previous owner and new owner from columns for transfer!");
             }
         });
 
@@ -77,7 +77,7 @@ public class MainWindow extends BaseWindow {
                 confirmFileStats();
                 clearListAndTextArea();
             } catch (NoSuchElementException exception) {
-                success.setText("Please choose the company from the first column!");
+                success.setText("Please choose the company from the first column! \n It would be the file name.");
             }
         });
 
@@ -181,7 +181,7 @@ public class MainWindow extends BaseWindow {
 
         success = new JLabel("Result:");
         success.setForeground(Color.BLACK);
-        success.setBounds(10, 340, 450, 25);
+        success.setBounds(10, 340, 450, 50);
 
         generateFile = new JButton("Generate");
         generateFile.setBounds(350, 20, 100, 25);

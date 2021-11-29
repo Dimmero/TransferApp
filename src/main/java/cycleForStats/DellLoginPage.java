@@ -17,12 +17,7 @@ public class DellLoginPage  {
         PageFactory.initElements(driver.getDriver(), this);
     }
 
-    public void setServiceTag(WebElement element, String tag) {
-        element.sendKeys(tag);
-    }
-
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        setServiceTag(inputServiceTag, serviceTag);
-        inputServiceTag.sendKeys(Keys.ENTER);
+        inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
     }
 }
