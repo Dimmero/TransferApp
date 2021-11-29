@@ -33,6 +33,7 @@ public class SeleniumDriver {
     public void initDriver() {
         System.setProperty("webdriver.chrome.driver", "C:\\webdriver\\chromedriver.exe");
         driver.manage().window().setSize(new Dimension(500, 800));
+        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     }
 
     public void openNewTab(String url) {
@@ -42,10 +43,6 @@ public class SeleniumDriver {
         js.executeScript( jsScript);
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1));
-    }
-
-    public void waitForSelect() {
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
     }
 
     public void waitForElementVisibility(By locator) {

@@ -39,7 +39,6 @@ public class NewOwnerForm extends TransferWarrantyPage {
     }
 
     public void fillForm(Company company) {
-        driver.waitForSelect();
         select(selectUsageID, selectUsage, USAGE);
         driver.waitForElementAndSendKeys(newOwnerNameID, company.getName());
         driver.waitForElementAndSendKeys(newOwnerEmailID, company.getEmail());
