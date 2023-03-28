@@ -1,34 +1,43 @@
 package cycleForTransfer;
 
 import entities.Company;
-import core.SeleniumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.time.Duration;
 
 public class PreviousOwnerForm extends TransferWarrantyPage {
-    public final String COUNTRY_POLAND = "PL";
-    private final By countryLabelID = By.id("ddlLocation");
-    private final By companyNameID = By.id("txtCompanyName");
-    private final By companyZipCodeID = By.id("txtZipcode");
-    private final By submitButtonID = By.id("retailOT_spanContinueButton");
+    protected final String TITLE = "Ownership Transfer | Dell Vietnam";
+    @FindBy(id = "ddlLocation")
+    public WebElement countryInput;
 
-    public PreviousOwnerForm(SeleniumDriver driver) {
-        super(driver);
+    @FindBy(id = "txtCompanyName")
+    public WebElement companyNameInput;
+
+    @FindBy(id = "txtZipcode")
+    public WebElement companyZipCodeInput;
+
+    @FindBy(id = "retailOT_btnContinue")
+    public WebElement submitButtonInput;
+
+    public PreviousOwnerForm() {
+        PageFactory.initElements(driver.getDriver(), this);
     }
 
     public void fillForm(Company company) {
-        driver.waitForElementAndSendKeys(companyNameID, company.getName());
-        driver.waitForElementAndSendKeys(companyZipCodeID, company.getZipCode());
-        driver.waitForElementAndClick(submitButtonID);
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(companyNameInput)).sendKeys(company.getName());
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(companyZipCodeInput)).sendKeys(company.getZipCode());
+        submitButtonInput.click();
     }
 
-    public boolean tagIsAlreadyTransferred() {
-        driver.waitForElementVisibility(countryLabelID);
-        driver.waitForCountryCheck();
-        String option = (String)((JavascriptExecutor) driver.getDriver()).executeScript("return document.getElementById('ddlLocation').value");
-        return option.contains(COUNTRY_POLAND);
+    public String grabPreviousOwnerCountryInfo() {
+        driver.getWait().until(ExpectedConditions.visibilityOf(countryInput));
+        driver.getWait().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.visibilityOf(countryInput));
+        return countryInput.getAttribute("value");
     }
 
 }

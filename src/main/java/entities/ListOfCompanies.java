@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ListOfCompanies {
     public static ArrayList<Company> companyList = new ArrayList<>();
 
-    private static final Company laptokcom = new Company("Laptokcom", "dima@laptok.com", "Krakowska 56", "PL", "Wieliczka", "Lesser Poland", "32-020", "601913957");
+    private static final Company laptokcom = new Company("Laptokcom", "dima@laptok.com", "Krakowska 56", "PL", "Wieliczka", "12", "32-020", "601913957");
     private static final Company bufotech = new Company("Bufotech", "bufotech@gmail.com", "", "UK", "", "", "FY83AY", "601913957");
     private static final Company ecomputers = new Company("Ecomputers", "dima@laptok.com", "", "UK", "", "", "Ne166DZ", "601913957");
     private static final Company maxmart = new Company("Max Mart", "dima@laptok.com", "118 Edwardia Dr.", "US", "Greensboro", "", "27409", "601913957");

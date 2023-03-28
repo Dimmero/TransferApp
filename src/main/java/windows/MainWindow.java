@@ -5,6 +5,7 @@ import cycleForTransfer.CycleForTransfer;
 import core.*;
 import entities.Company;
 import entities.ListOfCompanies;
+import org.openqa.selenium.WebDriver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +43,7 @@ public class MainWindow extends BaseWindow {
     private final ArrayList<JRadioButton> toList;
     private ArrayList<String> listOfServiceTags;
     private CycleForStats stats;
+    public SeleniumDriver driver;
 
     public MainWindow() {
         super();
@@ -60,7 +62,7 @@ public class MainWindow extends BaseWindow {
             try {
             Company previousOwner = getCheckedCompany(fromList);
             Company newOwner = getCheckedCompany(toList);
-            CycleForTransfer cycle = new CycleForTransfer();
+            CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName());
             cycle.getCycle(getListOfServiceTags(), previousOwner, newOwner);
             confirmTransferredTags(newOwner);
             clearListAndTextArea();
@@ -71,13 +73,13 @@ public class MainWindow extends BaseWindow {
 
         generateStats.addActionListener(e -> {
             try {
-                String company = getCheckedCompany(fromList).getName();
+                String company = getCheckedCompany(fromList).getName().trim();
                 stats = new CycleForStats(company);
                 stats.getCycleForStatistics(getListOfServiceTags());
                 confirmFileStats();
                 clearListAndTextArea();
             } catch (NoSuchElementException exception) {
-                success.setText("Please choose the company from the first column! \n It would be the file name.");
+                success.setText("Please choose the company from the first column!");
             }
         });
 

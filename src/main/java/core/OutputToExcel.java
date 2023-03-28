@@ -3,6 +3,7 @@ package core;
 import java.io.*;
 import java.util.List;
 
+import cycleForTransfer.PreviousOwnerForm;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -16,8 +17,9 @@ public class OutputToExcel {
 
     public OutputToExcel(String company)  {
         WORKBOOK = new HSSFWorkbook();
+        int randNum = (int) (Math.random() * (100 - 1 + 1) + 1);
         try {
-            OUTPUT_STREAM = new FileOutputStream("C:\\Users\\Dimmer\\Desktop\\Warranty(copy)\\" + company + ".xlsx");
+            OUTPUT_STREAM = new FileOutputStream("/Users/dimaakulicz/Desktop/Desktop - Dima’s MacBook Pro/Laptok/" + company + randNum + ".xlsx");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -32,6 +34,17 @@ public class OutputToExcel {
         writeToFile();
     }
 
+    public void getStatisticsTransfer(int rowCount, String tag, String country){
+        if (rowCount == 0) {
+            HSSFRow rowForFiltering = SHEET.createRow(0);
+            rowForFiltering.createCell(0).setCellValue("Service tag:");
+            rowForFiltering.createCell(1).setCellValue("Country:");
+        }
+            HSSFRow row = SHEET.createRow(rowCount + 1);
+            row.createCell(0).setCellValue(tag);
+            row.createCell(1).setCellValue(country);
+    }
+
     public void getStatistics(int rowCount, String tag, WarrantyInfoPage warrantyInfoPage){
         if (rowCount == 0) {
             HSSFRow rowForFiltering = SHEET.createRow(0);
@@ -39,10 +52,15 @@ public class OutputToExcel {
             rowForFiltering.createCell(1).setCellValue("Country:");
             rowForFiltering.createCell(2).setCellValue("Warranty expires:");
         }
-            HSSFRow row = SHEET.createRow(rowCount + 1);
-            row.createCell(0).setCellValue(tag);
+        HSSFRow row = SHEET.createRow(rowCount + 1);
+        row.createCell(0).setCellValue(tag);
+        if (warrantyInfoPage.checkIfIssue()){
+            row.createCell(1).setCellValue(warrantyInfoPage.INLINE_ISSUE);
+            row.createCell(2).setCellValue(warrantyInfoPage.INLINE_ISSUE);
+        } else {
             row.createCell(1).setCellValue(warrantyInfoPage.getCountryLabel());
             row.createCell(2).setCellValue(warrantyInfoPage.getWarrantyExpiresInfo());
+        }
 //      JavaScript implementation(slower)
 //             row.createCell(2).setCellValue(warrantyInfoPage.getCountryName());
     }

@@ -1,26 +1,26 @@
 package cycleForTransfer;
 
+import BaseElements.BaseAbstractPage;
 import core.SeleniumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class TransferWarrantyPage  {
-    public SeleniumDriver driver;
+import java.util.prefs.BackingStoreException;
 
+public class TransferWarrantyPage  extends BaseAbstractPage {
     @FindBy(id = "OTST_txtSTag1")
     public WebElement inputServiceTag;
-    public By inputServiceTagID = By.id("OTST_txtSTag1");
 
-    public TransferWarrantyPage(SeleniumDriver driver) {
-        this.driver = driver;
+    public TransferWarrantyPage() {
         PageFactory.initElements(driver.getDriver(), this);
     }
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        driver.waitForElementVisibility(inputServiceTagID);
-        inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
+        driver.getWait().until(ExpectedConditions.visibilityOf(inputServiceTag)).sendKeys(serviceTag, Keys.ENTER);
     }
+
 }
