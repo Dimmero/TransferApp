@@ -11,18 +11,21 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 public class WarrantyInfoPage extends BaseAbstractPage {
     public final String INLINE_ISSUE = "Issue with Support Services";
 
-    @FindBy(xpath = "//a[@id='viewDetailsWarranty']")
+    @FindBy(id = "viewDetailsWarranty")
     public WebElement expandInfo;
+    By expandInfoID = By.id("viewDetailsWarranty");
 
-    @FindBy(id = "countryLabel")
+    @FindBy(xpath = "//div[@id='countryLabel']//div")
     public WebElement countryLabel;
     public By countryLabelXpath = By.xpath("//div[@id='countryLabel']//div");
 
     @FindBy(id = "dsk-expirationDt")
     public WebElement warrantyExpiresLabel;
+    public By warrantyExpiresLabelID = By.id("dsk-expirationDt");
 
     @FindBy(id = "ps-inlineWarranty")
     public WebElement warrantyInlineInfo;
+    By warrantyInlineInfoID = By.id("ps-inlineWarranty");
 
     public WarrantyInfoPage() {
         PageFactory.initElements(driver.getDriver(), this);
@@ -30,17 +33,18 @@ public class WarrantyInfoPage extends BaseAbstractPage {
     }
 
     public String getCountryLabel() {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(expandInfo)).click();
-        return driver.waitForElementAndGetText(countryLabel);
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(expandInfoID));
+        expandInfo.click();
+        return driver.waitForElementAndGetText(countryLabelXpath);
     }
 
     public boolean checkIfIssue() {
-        String warrantyInfo = driver.waitForElementAndGetText(warrantyInlineInfo);
+        String warrantyInfo = driver.waitForElementAndGetText(warrantyInlineInfoID);
         return warrantyInfo.contains(INLINE_ISSUE);
     }
 
     public String getWarrantyExpiresInfo() {
-        return driver.waitForElementAndGetText(warrantyExpiresLabel);
+        return driver.waitForElementAndGetText(warrantyExpiresLabelID);
     }
 
     public String getCountryName() {

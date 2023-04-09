@@ -56,9 +56,9 @@ public class SeleniumDriver extends BaseObject {
         this.driver.switchTo().window(tabs.get(tab));
     }
 
-    public String waitForElementAndGetText(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
-        return element.getAttribute("innerText");
+    public String waitForElementAndGetText(By element) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(element));
+        return driver.findElement(element).getAttribute("innerText");
     }
 
     public void closeTabForStats() {

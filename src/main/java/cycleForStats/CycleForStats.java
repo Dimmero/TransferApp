@@ -21,9 +21,8 @@ public class CycleForStats extends BaseAbstractPage  {
 
     public void getCycleForStatistics(ArrayList<String> list) {
         list.forEach(tag -> {
-            dellLoginPage.passServiceTagAndSubmit(tag);
+            dellLoginPage.provideTagWithValidation(tag);
             outputToExcel.getStatistics(list.indexOf(tag), tag, warrantyInfoPage);
-            driver.closeTabForStats();
         });
         outputToExcel.writeToFile();
         driver.quitDriver();

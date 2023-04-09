@@ -9,8 +9,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.Duration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static core.SeleniumDriver.tabs;
 
@@ -38,30 +36,18 @@ public class DellLoginPage extends BaseAbstractPage {
         PageFactory.initElements(driver.getDriver(), this);
     }
 
-    public int passServiceTagAndSubmit(String serviceTag) {
-        int pass = 0;
+    public void provideTagWithValidation(String tag) {
         driver.getDriver().get(URL_STATS);
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
-        inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
-        String url = driver.getDriver().getCurrentUrl();
-        if (matchFound("^.*(overview)$", url)) {
-            closeStatTabAndOpenAgain();
-        } else {
-            waitAndClickSearch();
-            pass = 1;
-        }
-        return pass;
-    }
-
-    public void provideTagValid(String tag) {
         passServiceTagAndGoToTheNextPage(tag);
+        driver.sleepForSomeTime(3000);
         if (driver.getDriver().getCurrentUrl().length() < 45) {
             waitAndClickSearch();
         }
     }
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTag)).sendKeys(serviceTag, Keys.ENTER);;
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
+        inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
     }
 
     public void waitAndClickSearch() {

@@ -7,8 +7,6 @@ import cycleForStats.DellLoginPage;
 import entities.Company;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static core.SeleniumDriver.tabs;
 
@@ -36,7 +34,7 @@ public class CycleForTransfer extends BaseAbstractPage {
             if (toggle) {
                 toggle = false;
                 driver.openNewTab(URL_STATS, 1);
-                dellLoginPage.provideTagValid(tag);
+                dellLoginPage.provideTagWithValidation(tag);
             }
             while (transfer) {
                 driver.openNewTab(URL_TRANSFER, 2);
