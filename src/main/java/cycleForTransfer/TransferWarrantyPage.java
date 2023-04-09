@@ -14,13 +14,15 @@ import java.util.prefs.BackingStoreException;
 public class TransferWarrantyPage  extends BaseAbstractPage {
     @FindBy(id = "OTST_txtSTag1")
     public WebElement inputServiceTag;
+    By inputServiceTagID = By.id("OTST_txtSTag1");
 
     public TransferWarrantyPage() {
         PageFactory.initElements(driver.getDriver(), this);
     }
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        driver.getWait().until(ExpectedConditions.visibilityOf(inputServiceTag)).sendKeys(serviceTag, Keys.ENTER);
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
+        inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
     }
 
 }

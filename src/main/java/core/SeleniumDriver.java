@@ -7,7 +7,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +23,7 @@ public class SeleniumDriver extends BaseObject {
     }
 
     public WebDriver getDriver() {
-        return driver;
+        return this.driver;
     }
 
     public WebDriverWait getWait() {
@@ -33,6 +32,7 @@ public class SeleniumDriver extends BaseObject {
 
     public void quitDriver() {
         driver.quit();
+        driver = null;
     }
 
     public void runChromeDriver(boolean headless) {
@@ -44,7 +44,7 @@ public class SeleniumDriver extends BaseObject {
         }
         this.driver = new ChromeDriver();
         this.driver.manage().window().maximize();
-        this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        this.driver.manage().timeouts().implicitlyWait(24, TimeUnit.SECONDS);
     }
 
     public void openNewTab(String url, int tab) {
@@ -62,7 +62,6 @@ public class SeleniumDriver extends BaseObject {
     }
 
     public void closeTabForStats() {
-        tabs = new ArrayList<>(driver.getWindowHandles());
         driver.close();
         driver.switchTo().window(tabs.get(0));
     }
