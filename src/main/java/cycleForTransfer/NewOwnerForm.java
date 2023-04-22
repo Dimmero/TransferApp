@@ -66,12 +66,13 @@ public class NewOwnerForm extends TransferWarrantyPage {
 
     @FindBy(id = "retailOT_btnStartAgain")
     public WebElement submitAgain;
-
+    By submitAgainID = By.id("retailOT_btnStartAgain");
     public NewOwnerForm() {
         PageFactory.initElements(driver.getDriver(), this);
     }
 
     public void fillForm(Company company) {
+        driver.sleepForSomeTime(2000);
         select(selectUsage, USAGE);
         driver.getWait().until(ExpectedConditions.elementToBeClickable(companyNameInputID));
         companyNameInput.sendKeys(company.getName());
@@ -101,12 +102,14 @@ public class NewOwnerForm extends TransferWarrantyPage {
     public void submitForm() {
         driver.getWait().until(ExpectedConditions.elementToBeClickable(submitNewOwnerID));
         submitNewOwner.click();
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(btnNewOwnerModelContinueID));
+        driver.getWait().until(ExpectedConditions.visibilityOfElementLocated(btnNewOwnerModelContinueID));
         btnNewOwnerModelContinue.click();
         driver.getWait().until(ExpectedConditions.elementToBeClickable(checkboxAgreeXpath));
         checkboxAgree.click();
         driver.getWait().until(ExpectedConditions.elementToBeClickable(submitButtonFinalID));
         submitButtonFinal.click();
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(submitAgainID));
+        submitAgain.click();
     }
 }
 

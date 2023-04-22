@@ -11,72 +11,80 @@ import java.util.ArrayList;
 import static core.SeleniumDriver.tabs;
 
 public class CycleForTransfer extends BaseAbstractPage {
-    private TransferWarrantyPage transferWarrantyPage;
-    private PreviousOwnerForm previousOwnerForm;
-    private NewOwnerForm newOwnerForm;
-    private final OutputToExcel outputToExcel;
-    private DellLoginPage dellLoginPage;
-    boolean toggle = true;
-    Boolean transfer = true;
+    private final TransferWarrantyPage TRANSFER_WARRANTY_PAGE;
+    private final PreviousOwnerForm PREVIOUS_OWNER_PAGE;
+    private final NewOwnerForm NEW_OWNER_FORM;
+    private final OutputToExcel OUTPUT_TO_EXCEL;
+    private final DellLoginPage DELL_LOGIN_PAGE;
+    private Company previousOwner;
+    private Company newOwner;
 
-    public CycleForTransfer(String company) {
+    public CycleForTransfer(String company, Company previousOwner, Company newOwner) {
         driver = new SeleniumDriver();
-        this.transferWarrantyPage = new TransferWarrantyPage();
-        this.previousOwnerForm = new PreviousOwnerForm();
-        this.newOwnerForm = new NewOwnerForm();
-        this.outputToExcel = new OutputToExcel(company);
-        this.dellLoginPage = new DellLoginPage();
+        this.TRANSFER_WARRANTY_PAGE = new TransferWarrantyPage();
+        this.PREVIOUS_OWNER_PAGE = new PreviousOwnerForm();
+        this.NEW_OWNER_FORM = new NewOwnerForm();
+        this.OUTPUT_TO_EXCEL = new OutputToExcel(company);
+        this.DELL_LOGIN_PAGE = new DellLoginPage();
+        this.previousOwner = previousOwner;
+        this.newOwner = newOwner;
     }
 
-    public void getCycle(ArrayList<String> list, Company fromCompany, Company toCompany) {
+    public void getCycle(ArrayList<String> list) {
+        driver.openTransferAndStatsTabs();
+        driver.getDriver().switchTo().window(tabs.get(1));
         list.forEach(tag -> {
-            //if modal with validation appears
-            if (toggle) {
-                toggle = false;
-                driver.openNewTab(URL_STATS, 1);
-                dellLoginPage.provideTagWithValidation(tag);
+            TRANSFER_WARRANTY_PAGE.passServiceTagAndGoToTheNextPage(tag);
+            if (!checkIfOnPreviousOwnerPage()) {
+                goThroughValidationAndProvideTag(list, tag);
             }
-            while (transfer) {
-                driver.openNewTab(URL_TRANSFER, 2);
-                transferWarrantyPage.passServiceTagAndGoToTheNextPage(tag);
-                //if doesn't take service tag go to stats tab and provide tag until validation appears
-                driver.sleepForSomeTime(2000);
-                if (driver.getDriver().getCurrentUrl().length() < 51) {
-                    provideTagUntilOk(list);
-                } else {
-                    transfer = false;
-                }
-            }
-            String country = previousOwnerForm.grabPreviousOwnerCountryInfo();
-            if (!country.contains(COUNTRY_POLAND)) {
-                outputToExcel.getStatisticsTransfer(list.indexOf(tag), tag, country);
-                previousOwnerForm.fillForm(fromCompany);
-                newOwnerForm.fillForm(toCompany);
-                newOwnerForm.submitForm();
-            } else {
-                outputToExcel.getStatisticsTransfer(list.indexOf(tag), tag, country);
-            }
-            driver.getDriver().close();
-            driver.getDriver().switchTo().window(tabs.get(1));
-            transfer = true;
+            checkIfTransferredAndDoTheRest(list.indexOf(tag), tag, previousOwner, newOwner);
         });
-        outputToExcel.writeToFile();
+        OUTPUT_TO_EXCEL.writeToFile();
         driver.quitDriver();
     }
 
-    private void provideTagUntilOk(ArrayList<String> list) {
-        dellLoginPage.closeTransferAndStatTab();
+    private void checkIfTransferredAndDoTheRest(int tagCounter, String tag, Company fromCompany, Company toCompany) {
+        String country = PREVIOUS_OWNER_PAGE.grabPreviousOwnerCountryInfo();
+        if (country.contains(COUNTRY_POLAND)) {
+            writeToFile(tagCounter, tag, country);
+        } else {
+            fillFormsAndSubmitTransfer(tagCounter, tag, country, fromCompany, toCompany);
+        }
+    }
+
+    private void writeToFile(int tagCounter, String tag, String country) {
+        OUTPUT_TO_EXCEL.getStatisticsTransfer(tagCounter, tag, country);
+        driver.getDriver().get(URL_TRANSFER);
+        TRANSFER_WARRANTY_PAGE.clearServiceTag();
+    }
+
+    private void fillFormsAndSubmitTransfer(int tagCounter, String tag, String country, Company fromCompany, Company toCompany) {
+        try {
+            OUTPUT_TO_EXCEL.getStatisticsTransfer(tagCounter, tag, country);
+            PREVIOUS_OWNER_PAGE.fillForm(fromCompany);
+            NEW_OWNER_FORM.fillForm(toCompany);
+            NEW_OWNER_FORM.submitForm();
+        } catch (Exception ignored) {
+            System.out.println(tag + " is not transferred. Something went wrong");
+        }
+    }
+
+    private void goThroughValidationAndProvideTag(ArrayList<String> list, String tag) {
         for (String serial : list) {
-            dellLoginPage.passServiceTagAndGoToTheNextPage(serial);
-            driver.sleepForSomeTime(2000);
-            waitForPageLoad();
-            if (matchFound("^.*(en-vn)$", driver.getDriver().getCurrentUrl())) {
-                dellLoginPage.waitForValidationModal();
+            if (DELL_LOGIN_PAGE.provideTagWithValidation(serial) == 1) {
+                driver.getDriver().switchTo().window(tabs.get(1));
+                TRANSFER_WARRANTY_PAGE.inputServiceTag.clear();
+                TRANSFER_WARRANTY_PAGE.passServiceTagAndGoToTheNextPage(tag);
                 break;
             } else {
-                dellLoginPage.closeStatTabAndOpenAgain();
+                driver.getDriver().get(URL_STATS);
             }
         }
+    }
+
+    private boolean checkIfOnPreviousOwnerPage() {
+        return matchFound("^.*(currentowner)$", driver.getDriver().getCurrentUrl());
     }
 }
 

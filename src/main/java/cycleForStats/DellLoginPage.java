@@ -36,41 +36,30 @@ public class DellLoginPage extends BaseAbstractPage {
         PageFactory.initElements(driver.getDriver(), this);
     }
 
-    public void provideTagWithValidation(String tag) {
-        driver.getDriver().get(URL_STATS);
-        passServiceTagAndGoToTheNextPage(tag);
-        driver.sleepForSomeTime(3000);
-        if (driver.getDriver().getCurrentUrl().length() < 45) {
-            waitAndClickSearch();
+    public int provideTagWithValidation(String tag) {
+        try {
+            driver.getDriver().switchTo().window(tabs.get(2));
+            driver.getDriver().get(URL_STATS);
+            passServiceTagAndGoToTheNextPage(tag);
+            driver.sleepForSomeTime(3000);
+            if (matchFound("^.*(products)$", driver.getDriver().getCurrentUrl())) {
+                waitAndClickSearch();
+                return 1;
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            return 0;
         }
     }
 
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
+        driver.getWait().until(ExpectedConditions.visibilityOfElementLocated(inputServiceTagID));
         inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
     }
 
     public void waitAndClickSearch() {
         driver.getWait().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.invisibilityOf(iframe));
         buttonSearch.click();
-    }
-
-    public void closeStatTabAndOpenAgain() {
-        driver.getDriver().close();
-        driver.getDriver().switchTo().window(tabs.get(0));
-        driver.openNewTab(URL_STATS, 1);
-    }
-
-    public void closeTransferAndStatTab() {
-        driver.getDriver().close();
-        driver.getDriver().switchTo().window(tabs.get(1));
-        closeStatTabAndOpenAgain();
-    }
-
-    public void waitForValidationModal() {
-        waitForPageLoad();
-        if (!matchFound("^.*(overview)$", driver.getDriver().getCurrentUrl())) {
-            waitAndClickSearch();
-        }
     }
 }

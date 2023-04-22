@@ -1,5 +1,6 @@
 package core;
 
+import BaseElements.BaseAbstractPage;
 import BaseElements.BaseObject;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -48,22 +49,22 @@ public class SeleniumDriver extends BaseObject {
     }
 
     public void openNewTab(String url, int tab) {
-        String URL_TRANSFER = "'" + url + "'";
-        String jsScript = "window.open(" + URL_TRANSFER + ", '_blank');";
+        String URL = "'" + url + "'";
+        String jsScript = "window.open(" + URL + ", '_blank');";
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(jsScript);
         tabs = new ArrayList<>(driver.getWindowHandles());
         this.driver.switchTo().window(tabs.get(tab));
     }
 
+    public void openTransferAndStatsTabs() {
+        openNewTab(BaseAbstractPage.URL_TRANSFER, 1);
+        openNewTab(BaseAbstractPage.URL_STATS, 2);
+    }
+
     public String waitForElementAndGetText(By element) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(element));
         return driver.findElement(element).getAttribute("innerText");
-    }
-
-    public void closeTabForStats() {
-        driver.close();
-        driver.switchTo().window(tabs.get(0));
     }
 
     public void sleepForSomeTime(int i) {

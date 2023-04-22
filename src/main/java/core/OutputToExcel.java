@@ -61,8 +61,6 @@ public class OutputToExcel {
             row.createCell(1).setCellValue(warrantyInfoPage.getCountryLabel());
             row.createCell(2).setCellValue(warrantyInfoPage.getWarrantyExpiresInfo());
         }
-//      JavaScript implementation(slower)
-//             row.createCell(2).setCellValue(warrantyInfoPage.getCountryName());
     }
 
     public void writeToFile() {

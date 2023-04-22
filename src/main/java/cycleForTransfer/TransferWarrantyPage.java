@@ -16,6 +16,10 @@ public class TransferWarrantyPage  extends BaseAbstractPage {
     public WebElement inputServiceTag;
     By inputServiceTagID = By.id("OTST_txtSTag1");
 
+    @FindBy(id = "OTST_clearproduct1")
+    public WebElement clearServiceTag;
+    By clearServiceTagID = By.id("OTST_clearproduct1");
+
     public TransferWarrantyPage() {
         PageFactory.initElements(driver.getDriver(), this);
     }
@@ -23,6 +27,12 @@ public class TransferWarrantyPage  extends BaseAbstractPage {
     public void passServiceTagAndGoToTheNextPage(String serviceTag) {
         driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
         inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
+        driver.sleepForSomeTime(3000);
+    }
+
+    public void clearServiceTag() {
+        driver.getWait().until(ExpectedConditions.elementToBeClickable(clearServiceTagID));
+        clearServiceTag.click();
     }
 
 }

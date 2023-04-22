@@ -20,9 +20,14 @@ public class CycleForStats extends BaseAbstractPage  {
     }
 
     public void getCycleForStatistics(ArrayList<String> list) {
+        driver.openNewTab(BaseAbstractPage.URL_STATS, 1);
         list.forEach(tag -> {
-            dellLoginPage.provideTagWithValidation(tag);
-            outputToExcel.getStatistics(list.indexOf(tag), tag, warrantyInfoPage);
+            try {
+                dellLoginPage.provideTagWithValidation(tag);
+                outputToExcel.getStatistics(list.indexOf(tag), tag, warrantyInfoPage);
+            } catch (Exception e) {
+                System.out.println("Something went wrong with " + tag);
+            }
         });
         outputToExcel.writeToFile();
         driver.quitDriver();

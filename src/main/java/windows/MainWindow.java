@@ -62,8 +62,8 @@ public class MainWindow extends BaseWindow {
             try {
             Company previousOwner = getCheckedCompany(fromList);
             Company newOwner = getCheckedCompany(toList);
-            CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName());
-            cycle.getCycle(getListOfServiceTags(), previousOwner, newOwner);
+            CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName(), previousOwner, newOwner);
+            cycle.getCycle(getListOfServiceTags());
             confirmTransferredTags(newOwner);
             clearListAndTextArea();
             } catch (NoSuchElementException exception) {

@@ -32,6 +32,7 @@ public class PreviousOwnerForm extends TransferWarrantyPage {
     }
 
     public void fillForm(Company company) {
+        driver.sleepForSomeTime(1000);
         driver.getWait().until(ExpectedConditions.elementToBeClickable(companyNameInputID));
         companyNameInput.sendKeys(company.getName());
         driver.getWait().until(ExpectedConditions.elementToBeClickable(companyZipCodeInputID));
@@ -41,9 +42,7 @@ public class PreviousOwnerForm extends TransferWarrantyPage {
     }
 
     public String grabPreviousOwnerCountryInfo() {
-        driver.getWait().until(ExpectedConditions.visibilityOf(countryInput));
-        return countryInput.getAttribute("value");
-//        return (String)((JavascriptExecutor) driver.getDriver()).executeScript("return document.getElementById('ddlLocation').value");
+        return (String)((JavascriptExecutor) driver.getDriver()).executeScript("return document.getElementById('ddlLocation').value");
     }
 
 }
