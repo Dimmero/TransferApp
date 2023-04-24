@@ -20,7 +20,7 @@ public class CycleForStats extends BaseAbstractPage  {
     }
 
     public void getCycleForStatistics(ArrayList<String> list) {
-        driver.openNewTab(BaseAbstractPage.URL_STATS, 1);
+        driver.openTransferAndStatsTabs();
         list.forEach(tag -> {
             try {
                 dellLoginPage.provideTagWithValidation(tag);
