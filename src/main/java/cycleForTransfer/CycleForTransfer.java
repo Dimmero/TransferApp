@@ -1,11 +1,14 @@
 package cycleForTransfer;
 
-import BaseElements.BaseAbstractPage;
+import baseElements.BaseAbstractPage;
 import core.OutputToExcel;
 import core.SeleniumDriver;
 import cycleForStats.DellLoginPage;
 import entities.Company;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.time.Duration;
 import java.util.ArrayList;
 
 import static core.SeleniumDriver.tabs;
@@ -16,11 +19,14 @@ public class CycleForTransfer extends BaseAbstractPage {
     private final NewOwnerForm NEW_OWNER_FORM;
     private final OutputToExcel OUTPUT_TO_EXCEL;
     private final DellLoginPage DELL_LOGIN_PAGE;
+    private final Cookies COOKIES;
     private Company previousOwner;
     private Company newOwner;
+    private boolean cookies1Off = true;
 
     public CycleForTransfer(String company, Company previousOwner, Company newOwner) {
         driver = new SeleniumDriver();
+        this.COOKIES = new Cookies();
         this.TRANSFER_WARRANTY_PAGE = new TransferWarrantyPage();
         this.PREVIOUS_OWNER_PAGE = new PreviousOwnerForm();
         this.NEW_OWNER_FORM = new NewOwnerForm();
@@ -30,22 +36,26 @@ public class CycleForTransfer extends BaseAbstractPage {
         this.newOwner = newOwner;
     }
 
-    public void getCycle(ArrayList<String> list) {
+    public void getCycle(ArrayList<String> list) throws TimeoutException {
         driver.openTransferAndStatsTabs();
         driver.getDriver().switchTo().window(tabs.get(1));
         list.forEach(tag -> {
-            TRANSFER_WARRANTY_PAGE.passServiceTagAndGoToTheNextPage(tag);
-            if (!checkIfOnPreviousOwnerPage()) {
-                goThroughValidationAndProvideTag(list, tag);
+            try {
+                while (TRANSFER_WARRANTY_PAGE.passServiceTagAndGoToTheNextPage(tag) != 1) {
+                    goProvideTag(list);
+                }
+                checkIfTransferredAndDoTheRest(list.indexOf(tag), tag, previousOwner, newOwner);
+            } catch (Exception e) {
+                throw new TimeoutException();
             }
-            checkIfTransferredAndDoTheRest(list.indexOf(tag), tag, previousOwner, newOwner);
         });
         OUTPUT_TO_EXCEL.writeToFile();
         driver.quitDriver();
     }
 
-    private void checkIfTransferredAndDoTheRest(int tagCounter, String tag, Company fromCompany, Company toCompany) {
+    private void checkIfTransferredAndDoTheRest(int tagCounter, String tag, Company fromCompany, Company toCompany) throws Exception {
         String country = PREVIOUS_OWNER_PAGE.grabPreviousOwnerCountryInfo();
+        System.out.println(country);
         if (country.contains(COUNTRY_POLAND)) {
             writeToFile(tagCounter, tag, country);
         } else {
@@ -59,32 +69,42 @@ public class CycleForTransfer extends BaseAbstractPage {
         TRANSFER_WARRANTY_PAGE.clearServiceTag();
     }
 
-    private void fillFormsAndSubmitTransfer(int tagCounter, String tag, String country, Company fromCompany, Company toCompany) {
+    private void fillFormsAndSubmitTransfer(int tagCounter, String tag, String country, Company fromCompany, Company toCompany) throws Exception {
         try {
             OUTPUT_TO_EXCEL.getStatisticsTransfer(tagCounter, tag, country);
             PREVIOUS_OWNER_PAGE.fillForm(fromCompany);
             NEW_OWNER_FORM.fillForm(toCompany);
             NEW_OWNER_FORM.submitForm();
         } catch (Exception ignored) {
-            System.out.println(tag + " is not transferred. Something went wrong");
+            throw new Exception("Not transferred " + tag);
         }
     }
 
-    private void goThroughValidationAndProvideTag(ArrayList<String> list, String tag) {
+    private void goProvideTag(ArrayList<String> list) {
         for (String serial : list) {
-            if (DELL_LOGIN_PAGE.provideTagWithValidation(serial) == 1) {
+            if (provideTagStats(serial) == 1) {
                 driver.getDriver().switchTo().window(tabs.get(1));
                 TRANSFER_WARRANTY_PAGE.inputServiceTag.clear();
-                TRANSFER_WARRANTY_PAGE.passServiceTagAndGoToTheNextPage(tag);
                 break;
-            } else {
-                driver.getDriver().get(URL_STATS);
             }
         }
     }
 
-    private boolean checkIfOnPreviousOwnerPage() {
-        return matchFound("^.*(currentowner)$", driver.getDriver().getCurrentUrl());
+    public int provideTagStats(String tag) {
+        driver.getDriver().switchTo().window(tabs.get(2));
+        driver.getDriver().get(URL_STATS);
+        if (cookies1Off) {
+            COOKIES.turnOffCookies();
+            cookies1Off = false;
+        }
+        DELL_LOGIN_PAGE.inputServiceTag.clear();
+        DELL_LOGIN_PAGE.passServiceTagAndGoToTheNextPage(tag);
+        try {
+            driver.getWait().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("product-support"));
+        } catch (Exception e) {
+            return 1;
+        }
+        return 0;
     }
 }
 

@@ -1,26 +1,28 @@
 package core;
 
-import BaseElements.BaseAbstractPage;
-import BaseElements.BaseObject;
+import baseElements.BaseAbstractPage;
+import baseElements.BaseObject;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+
 
 public class SeleniumDriver extends BaseObject {
     private WebDriver driver;
-    private WebDriverWait wait;
-    public static ArrayList<String> tabs;
+    private final WebDriverWait wait;
+    public static List<String> tabs;
     protected final String HEADLESS_CHROME = "headless";
     protected final String CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver";
 
     public SeleniumDriver() {
         runChromeDriver(false);
         this.wait = new WebDriverWait(this.driver, DEFAULT_TIMEOUT);
+        tabs = new ArrayList<>(driver.getWindowHandles());
     }
 
     public WebDriver getDriver() {
@@ -43,9 +45,11 @@ public class SeleniumDriver extends BaseObject {
         if (headless) {
             options.addArguments("--" + HEADLESS_CHROME);
         }
+//        WebDriverManager.chromedriver().setup();
+//        this.driver = new ChromeDriver(options);
         this.driver = new ChromeDriver();
         this.driver.manage().window().maximize();
-        this.driver.manage().timeouts().implicitlyWait(24, TimeUnit.SECONDS);
+//        this.driver.manage().timeouts().implicitlyWait(24, TimeUnit.SECONDS);
     }
 
     public void openNewTab(String url, int tab) {
@@ -53,8 +57,9 @@ public class SeleniumDriver extends BaseObject {
         String jsScript = "window.open(" + URL + ", '_blank');";
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(jsScript);
-        tabs = new ArrayList<>(driver.getWindowHandles());
-        this.driver.switchTo().window(tabs.get(tab));
+        wait.until(ExpectedConditions.numberOfWindowsToBe(tabs.size() + 1));
+        tabs.add(driver.getWindowHandles().stream().skip(tabs.size()).findFirst().orElseThrow());
+//        this.driver.switchTo().window(tabs.get(tab));
     }
 
     public void openTransferAndStatsTabs() {

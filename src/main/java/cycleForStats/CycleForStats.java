@@ -1,6 +1,6 @@
 package cycleForStats;
 
-import BaseElements.BaseAbstractPage;
+import baseElements.BaseAbstractPage;
 import core.OutputToExcel;
 import core.SeleniumDriver;
 

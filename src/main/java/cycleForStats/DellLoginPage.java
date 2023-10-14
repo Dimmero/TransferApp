@@ -1,6 +1,6 @@
 package cycleForStats;
 
-import BaseElements.BaseAbstractPage;
+import baseElements.BaseAbstractPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -20,6 +20,11 @@ public class DellLoginPage extends BaseAbstractPage {
     public WebElement inputServiceTag;
     By inputServiceTagID = By.id("inpEntrySelection");
 
+//    @FindBy(id = "homemfe-dropdown-input")
+//    public WebElement inputServiceTag;
+//    By inputServiceTagID = By.id("inpEntrySelection");
+
+
     @FindBy(id = "sec-text-container")
     public WebElement processingRequestMessage;
 
@@ -28,6 +33,11 @@ public class DellLoginPage extends BaseAbstractPage {
 
     @FindBy(xpath = "//span[@id='txtSearchEs']")
     public WebElement buttonSearch;
+
+
+//    @FindBy(id = "btnSubmit")
+//    public WebElement buttonSearch;
+
 
     @FindBy(id = "sec-cpt-if")
     public WebElement iframe;
@@ -41,7 +51,7 @@ public class DellLoginPage extends BaseAbstractPage {
             driver.getDriver().switchTo().window(tabs.get(2));
             driver.getDriver().get(URL_STATS);
             passServiceTagAndGoToTheNextPage(tag);
-            driver.sleepForSomeTime(3000);
+            driver.sleepForSomeTime(5000);
             if (matchFound("^.*(products)$", driver.getDriver().getCurrentUrl())) {
                 waitAndClickSearch();
                 return 1;

@@ -5,6 +5,7 @@ import cycleForTransfer.CycleForTransfer;
 import core.*;
 import entities.Company;
 import entities.ListOfCompanies;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 
 import javax.swing.*;
@@ -60,12 +61,12 @@ public class MainWindow extends BaseWindow {
 
         submitTransfer.addActionListener(e -> {
             try {
-            Company previousOwner = getCheckedCompany(fromList);
-            Company newOwner = getCheckedCompany(toList);
-            CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName(), previousOwner, newOwner);
-            cycle.getCycle(getListOfServiceTags());
-            confirmTransferredTags(newOwner);
-            clearListAndTextArea();
+                Company previousOwner = getCheckedCompany(fromList);
+                Company newOwner = getCheckedCompany(toList);
+                CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName(), previousOwner, newOwner);
+                cycle.getCycle(getListOfServiceTags());
+                confirmTransferredTags(newOwner);
+                clearListAndTextArea();
             } catch (NoSuchElementException exception) {
                 success.setText("Please choose the previous owner and new owner from columns for transfer!");
             }

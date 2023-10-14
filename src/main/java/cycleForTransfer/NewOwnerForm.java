@@ -78,11 +78,13 @@ public class NewOwnerForm extends TransferWarrantyPage {
         companyNameInput.sendKeys(company.getName());
         driver.getWait().until(ExpectedConditions.elementToBeClickable(emailInputID));
         emailInput.sendKeys(company.getEmail());
+        driver.sleepForSomeTime(2000);
         select(selectCountry, company.getCountry());
         driver.getWait().until(ExpectedConditions.elementToBeClickable(streetAddress1InputID));
         streetAddress1Input.sendKeys(company.getAddress());
         driver.getWait().until(ExpectedConditions.elementToBeClickable(cityInputID));
         cityInput.sendKeys(company.getCity());
+        driver.sleepForSomeTime(2000);
         select(selectState, company.getState());
         driver.getWait().until(ExpectedConditions.elementToBeClickable(zipCodeInputID));
         zipCodeInput.sendKeys(company.getZipCode());

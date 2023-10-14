@@ -1,6 +1,6 @@
 package cycleForStats;
 
-import BaseElements.BaseAbstractPage;
+import baseElements.BaseAbstractPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;

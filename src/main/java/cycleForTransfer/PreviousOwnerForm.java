@@ -42,6 +42,8 @@ public class PreviousOwnerForm extends TransferWarrantyPage {
     }
 
     public String grabPreviousOwnerCountryInfo() {
+        driver.getWait().until(ExpectedConditions.visibilityOf(countryInput));
+        driver.sleepForSomeTime(3000);
         return (String)((JavascriptExecutor) driver.getDriver()).executeScript("return document.getElementById('ddlLocation').value");
     }
 

@@ -1,4 +1,4 @@
-package BaseElements;
+package baseElements;
 
 import core.SeleniumDriver;
 
