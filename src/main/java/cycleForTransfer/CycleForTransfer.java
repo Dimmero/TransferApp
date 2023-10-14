@@ -55,7 +55,6 @@ public class CycleForTransfer extends BaseAbstractPage {
 
     private void checkIfTransferredAndDoTheRest(int tagCounter, String tag, Company fromCompany, Company toCompany) throws Exception {
         String country = PREVIOUS_OWNER_PAGE.grabPreviousOwnerCountryInfo();
-        System.out.println(country);
         if (country.contains(COUNTRY_POLAND)) {
             writeToFile(tagCounter, tag, country);
         } else {
