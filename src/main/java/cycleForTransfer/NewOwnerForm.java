@@ -72,45 +72,45 @@ public class NewOwnerForm extends TransferWarrantyPage {
     }
 
     public void fillForm(Company company) {
-        driver.sleepForSomeTime(2000);
+        driver.sleepForSomeTime(2);
         select(selectUsage, USAGE);
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(companyNameInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(companyNameInputID));
         companyNameInput.sendKeys(company.getName());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(emailInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(emailInputID));
         emailInput.sendKeys(company.getEmail());
-        driver.sleepForSomeTime(2000);
+        driver.sleepForSomeTime(2);
         select(selectCountry, company.getCountry());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(streetAddress1InputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(streetAddress1InputID));
         streetAddress1Input.sendKeys(company.getAddress());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(cityInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(cityInputID));
         cityInput.sendKeys(company.getCity());
-        driver.sleepForSomeTime(2000);
+        driver.sleepForSomeTime(2);
         select(selectState, company.getState());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(zipCodeInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(zipCodeInputID));
         zipCodeInput.sendKeys(company.getZipCode());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(areaCodeInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(areaCodeInputID));
         areaCodeInput.sendKeys(company.getPrefixNumber());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(phoneNumberInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(phoneNumberInputID));
         phoneNumberInput.sendKeys(company.getTelNumber());
         driver.getDriver().findElement(By.tagName(BODY_TAG)).sendKeys(Keys.CONTROL, Keys.ENTER);
     }
 
     private void select(WebElement element, String value) {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(selectUsage));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(selectUsage));
         Select select = new Select(element);
         select.selectByValue(value);
     }
 
     public void submitForm() {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(submitNewOwnerID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(submitNewOwnerID));
         submitNewOwner.click();
-        driver.getWait().until(ExpectedConditions.visibilityOfElementLocated(btnNewOwnerModelContinueID));
+        driver.getLongWait35().until(ExpectedConditions.visibilityOfElementLocated(btnNewOwnerModelContinueID));
         btnNewOwnerModelContinue.click();
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(checkboxAgreeXpath));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(checkboxAgreeXpath));
         checkboxAgree.click();
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(submitButtonFinalID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(submitButtonFinalID));
         submitButtonFinal.click();
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(submitAgainID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(submitAgainID));
         submitAgain.click();
     }
 }

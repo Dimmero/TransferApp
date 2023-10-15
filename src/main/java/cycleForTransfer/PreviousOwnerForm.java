@@ -8,10 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.time.Duration;
-
 public class PreviousOwnerForm extends TransferWarrantyPage {
-    protected final String TITLE = "Ownership Transfer | Dell Vietnam";
     @FindBy(id = "ddlLocation")
     public WebElement countryInput;
 
@@ -32,18 +29,18 @@ public class PreviousOwnerForm extends TransferWarrantyPage {
     }
 
     public void fillForm(Company company) {
-        driver.sleepForSomeTime(1000);
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(companyNameInputID));
+        driver.sleepForSomeTime(1);
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(companyNameInputID));
         companyNameInput.sendKeys(company.getName());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(companyZipCodeInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(companyZipCodeInputID));
         companyZipCodeInput.sendKeys(company.getZipCode());
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(submitButtonInputID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(submitButtonInputID));
         submitButtonInput.click();
     }
 
     public String grabPreviousOwnerCountryInfo() {
-        driver.getWait().until(ExpectedConditions.visibilityOf(countryInput));
-        driver.sleepForSomeTime(3000);
+        driver.getLongWait35().until(ExpectedConditions.visibilityOf(countryInput));
+        driver.sleepForSomeTime(3);
         return (String)((JavascriptExecutor) driver.getDriver()).executeScript("return document.getElementById('ddlLocation').value");
     }
 

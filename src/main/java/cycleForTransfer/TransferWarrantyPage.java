@@ -30,7 +30,7 @@ public class TransferWarrantyPage  extends BaseAbstractPage {
     }
 
     public int passServiceTagAndGoToTheNextPage(String serviceTag) {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(inputServiceTagID));
         if (cookies2Off) {
             cookies.turnOffCookies();
             cookies2Off = false;
@@ -46,7 +46,7 @@ public class TransferWarrantyPage  extends BaseAbstractPage {
     }
 
     public void clearServiceTag() {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(clearServiceTagID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(clearServiceTagID));
         clearServiceTag.click();
     }
 

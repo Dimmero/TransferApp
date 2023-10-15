@@ -23,8 +23,7 @@ public class Cookies extends BaseAbstractPage {
 
     public void turnOffCookies() {
         try {
-            WebDriverWait wait = new WebDriverWait(driver.getDriver(), 10);
-            wait.pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.elementToBeClickable(notAllowCookies));
+            driver.getShortWait10().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.elementToBeClickable(notAllowCookies));
             notAllowCookies.click();
         } catch (Exception o) {
             System.out.println("no stupid cookies, go further");

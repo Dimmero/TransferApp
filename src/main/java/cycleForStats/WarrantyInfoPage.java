@@ -33,7 +33,7 @@ public class WarrantyInfoPage extends BaseAbstractPage {
     }
 
     public String getCountryLabel() {
-        driver.getWait().until(ExpectedConditions.elementToBeClickable(expandInfoID));
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(expandInfoID));
         expandInfo.click();
         return driver.waitForElementAndGetText(countryLabelXpath);
     }
@@ -50,7 +50,7 @@ public class WarrantyInfoPage extends BaseAbstractPage {
     public String getCountryName() {
         String scriptForCountryName = "return document.evaluate('//div[@id='countryLabel']//div', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerText";
         ((JavascriptExecutor) driver.getDriver()).executeScript("$('a:contains('Wyświetl szczegóły')').trigger('click')");
-        driver.getWait().until(ExpectedConditions.visibilityOf(countryLabel));
+        driver.getLongWait35().until(ExpectedConditions.visibilityOf(countryLabel));
         return (String)((JavascriptExecutor) driver.getDriver()).executeScript(scriptForCountryName);
     }
 }

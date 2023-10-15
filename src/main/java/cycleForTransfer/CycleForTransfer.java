@@ -36,13 +36,14 @@ public class CycleForTransfer extends BaseAbstractPage {
         this.newOwner = newOwner;
     }
 
-    public void getCycle(ArrayList<String> list) throws TimeoutException {
-        driver.openTransferAndStatsTabs();
+    public void runCycle(ArrayList<String> list) throws TimeoutException {
+        String[] urls = {URL_TRANSFER, URL_STATS};
+        driver.openTabsWithUrl(urls);
         driver.getDriver().switchTo().window(tabs.get(1));
         list.forEach(tag -> {
             try {
                 while (TRANSFER_WARRANTY_PAGE.passServiceTagAndGoToTheNextPage(tag) != 1) {
-                    goProvideTag(list);
+                    provideTagsUntilAccessPositive(list);
                 }
                 checkIfTransferredAndDoTheRest(list.indexOf(tag), tag, previousOwner, newOwner);
             } catch (Exception e) {
@@ -79,7 +80,7 @@ public class CycleForTransfer extends BaseAbstractPage {
         }
     }
 
-    private void goProvideTag(ArrayList<String> list) {
+    private void provideTagsUntilAccessPositive(ArrayList<String> list) {
         for (String serial : list) {
             if (provideTagStats(serial) == 1) {
                 driver.getDriver().switchTo().window(tabs.get(1));
@@ -89,7 +90,7 @@ public class CycleForTransfer extends BaseAbstractPage {
         }
     }
 
-    public int provideTagStats(String tag) {
+    private int provideTagStats(String tag) {
         driver.getDriver().switchTo().window(tabs.get(2));
         driver.getDriver().get(URL_STATS);
         if (cookies1Off) {
@@ -99,7 +100,7 @@ public class CycleForTransfer extends BaseAbstractPage {
         DELL_LOGIN_PAGE.inputServiceTag.clear();
         DELL_LOGIN_PAGE.passServiceTagAndGoToTheNextPage(tag);
         try {
-            driver.getWait().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("product-support"));
+            driver.getLongWait35().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("product-support"));
         } catch (Exception e) {
             return 1;
         }
