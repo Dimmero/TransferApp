@@ -60,7 +60,7 @@ public class CycleForStats extends BaseAbstractPage  {
         DELL_LOGIN_PAGE.inputServiceTag.clear();
         DELL_LOGIN_PAGE.passServiceTagAndGoToTheNextPage(tag);
         try {
-            driver.getShortWait10().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("product-support"));
+            driver.getLongWait35().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("product-support"));
         } catch (Exception e) {
             return 0;
         }
