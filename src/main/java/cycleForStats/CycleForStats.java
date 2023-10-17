@@ -62,7 +62,7 @@ public class CycleForStats extends BaseAbstractPage  {
         try {
             driver.getLongWait35().pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("product-support"));
         } catch (Exception e) {
-            return 0;
+            provideTagStats(tag);
         }
         return 1;
     }
