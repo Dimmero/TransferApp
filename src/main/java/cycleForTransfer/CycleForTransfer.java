@@ -24,8 +24,8 @@ public class CycleForTransfer extends BaseAbstractPage {
     private Company newOwner;
     private boolean cookies1Off = true;
 
-    public CycleForTransfer(String company, Company previousOwner, Company newOwner) {
-        driver = new SeleniumDriver();
+    public CycleForTransfer(String company, Company previousOwner, Company newOwner, boolean headless) {
+        driver = new SeleniumDriver(headless);
         this.COOKIES = new Cookies();
         this.TRANSFER_WARRANTY_PAGE = new TransferWarrantyPage();
         this.PREVIOUS_OWNER_PAGE = new PreviousOwnerForm();
@@ -84,6 +84,7 @@ public class CycleForTransfer extends BaseAbstractPage {
         for (String serial : list) {
             if (provideTagStats(serial) == 1) {
                 driver.getDriver().switchTo().window(tabs.get(1));
+                driver.getDriver().get(URL_TRANSFER);
                 TRANSFER_WARRANTY_PAGE.inputServiceTag.clear();
                 break;
             }
@@ -97,6 +98,7 @@ public class CycleForTransfer extends BaseAbstractPage {
             COOKIES.turnOffCookies();
             cookies1Off = false;
         }
+        driver.getLongWait35().until(ExpectedConditions.elementToBeClickable(DELL_LOGIN_PAGE.inputServiceTag));
         DELL_LOGIN_PAGE.inputServiceTag.clear();
         DELL_LOGIN_PAGE.passServiceTagAndGoToTheNextPage(tag);
         try {

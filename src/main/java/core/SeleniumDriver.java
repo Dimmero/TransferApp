@@ -1,27 +1,37 @@
 package core;
 
-import baseElements.BaseObject;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.*;
 
 
-public class SeleniumDriver extends BaseObject {
-    private WebDriver driver;
+public class SeleniumDriver {
+    public WebDriver driver;
+    public WebDriver driver1;
     private final WebDriverWait longWait35;
     private final WebDriverWait shortWait10;
     public static List<String> tabs;
     protected final String HEADLESS_CHROME = "headless";
     protected final String CHROMEDRIVER_PATH = "/usr/local/bin/chromedriver";
+    protected final String GECKODRIVER_PATH = "/usr/local/bin/geckodriver";
 
-    public SeleniumDriver() {
-        runChromeDriver(false);
-        this.longWait35 = new WebDriverWait(this.driver, DEFAULT_TIMEOUT);
-        this.shortWait10 = new WebDriverWait(this.driver, 10);
+    private String USERNAME = "a5d9d299b73bd404151de-zone-custom-region-ru";
+    private String PASSWORD = "5be544928b7d2f6a69b216eef32389b0c64e9956";
+
+    private String MANGOPROXY_DNS = "43.152.113.55";
+    private int MANGOPROXY_PORT = 2334;
+
+    public SeleniumDriver(boolean headless) {
+        runChromeDriver(headless);
+        this.longWait35 = new WebDriverWait(this.driver, Duration.ofSeconds(35));
+        this.shortWait10 = new WebDriverWait(this.driver, Duration.ofSeconds(10));
         tabs = new ArrayList<>(driver.getWindowHandles());
     }
 
@@ -32,6 +42,7 @@ public class SeleniumDriver extends BaseObject {
     public WebDriverWait getLongWait35() {
         return this.longWait35;
     }
+
     public WebDriverWait getShortWait10() {
         return this.shortWait10;
     }
@@ -43,18 +54,45 @@ public class SeleniumDriver extends BaseObject {
     }
 
     public void runChromeDriver(boolean headless) {
-        System.setProperty(HEADLESS_CHROME, "false");
         System.setProperty("webdriver.chrome.driver", CHROMEDRIVER_PATH);
-        ChromeOptions options = new ChromeOptions();
-        if (headless) {
-            options.addArguments("--" + HEADLESS_CHROME);
-        }
-//        WebDriverManager.chromedriver().setup();
-//        this.driver = new ChromeDriver(options);
-        this.driver = new ChromeDriver();
+        this.driver = new ChromeDriver(getChromeOptions());
+        System.setProperty("webdriver.gecko.driver", GECKODRIVER_PATH);
+//        FirefoxOptions options = new FirefoxOptions();
+//        options.addPreference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+//        driver = new FirefoxDriver(options);
+//        this.driver1 = new FirefoxDriver();
         this.driver.manage().window().maximize();
-//        this.driver.manage().timeouts().implicitlyWait(24, TimeUnit.SECONDS);
+//        this.driver1.manage().window().maximize();
     }
+
+    private ChromeOptions getChromeOptions() {
+        Proxy proxy = new Proxy();
+        String proxyAuth = USERNAME + ":" + PASSWORD;
+        proxy.setProxyType(Proxy.ProxyType.MANUAL);
+        proxy.setHttpProxy(proxyAuth + "@" + MANGOPROXY_DNS + ":" + MANGOPROXY_PORT);
+        proxy.setSslProxy(proxyAuth + "@" + MANGOPROXY_DNS + ":" + MANGOPROXY_PORT);
+
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.setProxy(proxy);
+
+        // Directly add arguments without creating a separate list
+        chromeOptions.addArguments("--log-level=3"); // Correct log-level argument to set the verbosity
+        chromeOptions.addArguments("useAutomationExtension=false"); // Correctly disable the automation extension
+        chromeOptions.addArguments("--disable-extensions");
+        chromeOptions.addArguments("--disable-infobars"); // Note: This argument is deprecated and may not have an effect on newer versions
+//        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--disable-gpu");
+        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments("--incognito");
+        chromeOptions.addArguments("--disable-application-cache");
+        chromeOptions.addArguments("--disable-dev-shm-usage");
+        chromeOptions.addArguments("--disable-blink-features=AutomationControlled"); // Corrected typo here
+        chromeOptions.addArguments("--remote-debugging-port=9222");
+
+        // Return the configured ChromeOptions
+        return chromeOptions;
+    }
+
 
     public void openNewTab(String url) {
         String URL = "'" + url + "'";
@@ -66,7 +104,7 @@ public class SeleniumDriver extends BaseObject {
     }
 
     public void openTabsWithUrl(String[] urls) {
-        for (String url: urls) {
+        for (String url : urls) {
             openNewTab(url);
         }
     }

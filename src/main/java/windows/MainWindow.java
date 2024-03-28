@@ -42,7 +42,8 @@ public class MainWindow extends BaseWindow {
     private final ArrayList<JRadioButton> toList;
     private ArrayList<String> listOfServiceTags;
     private CycleForStats stats;
-    public SeleniumDriver driver;
+    private final boolean headless = false;
+//    public SeleniumDriver driver;
 
     public MainWindow() {
         super();
@@ -59,9 +60,10 @@ public class MainWindow extends BaseWindow {
 
         submitTransfer.addActionListener(e -> {
             try {
+                confirmTransferStart();
                 Company previousOwner = getCheckedCompany(fromList);
                 Company newOwner = getCheckedCompany(toList);
-                CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName(), previousOwner, newOwner);
+                CycleForTransfer cycle = new CycleForTransfer(previousOwner.getName(), previousOwner, newOwner, headless);
                 cycle.runCycle(getListOfServiceTags());
                 confirmTransferredTags(newOwner);
                 clearListAndTextArea();
@@ -73,7 +75,7 @@ public class MainWindow extends BaseWindow {
         generateStats.addActionListener(e -> {
             try {
                 String company = getCheckedCompany(fromList).getName().trim();
-                stats = new CycleForStats(company);
+                stats = new CycleForStats(company, false);
                 stats.getCycleForStatistics(getListOfServiceTags());
                 confirmFileStats();
                 clearListAndTextArea();
@@ -256,6 +258,10 @@ public class MainWindow extends BaseWindow {
 
     private void confirmTransferredTags(Company newOwner) {
         success.setText(listOfServiceTags + " have been successfully transferred to " + newOwner.getName());
+    }
+
+    private void confirmTransferStart() {
+        success.setText(" Transfer has been successfully started");
     }
 
     private void confirmFileStats() {

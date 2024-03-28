@@ -37,7 +37,7 @@ public class TransferWarrantyPage  extends BaseAbstractPage {
         }
         inputServiceTag.sendKeys(serviceTag, Keys.ENTER);
         try {
-            WebDriverWait wait = new WebDriverWait(driver.getDriver(), 12);
+            WebDriverWait wait = new WebDriverWait(driver.getDriver(), Duration.ofSeconds(15));
             wait.pollingEvery(Duration.ofMillis(500)).until(ExpectedConditions.urlContains("currentowner"));
         } catch (Exception e) {
             return 0;

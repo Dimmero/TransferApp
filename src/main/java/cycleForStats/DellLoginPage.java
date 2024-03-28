@@ -14,9 +14,11 @@ import static core.SeleniumDriver.tabs;
 
 public class DellLoginPage extends BaseAbstractPage {
 
-    @FindBy(id = "inpEntrySelection")
+    @FindBy(id = "homemfe-dropdown-input")
+//    @FindBy(id = "inpEntrySelection")
     public WebElement inputServiceTag;
-    By inputServiceTagID = By.id("inpEntrySelection");
+//    By inputServiceTagID = By.id("inpEntrySelection");
+    By inputServiceTagID = By.id("homemfe-dropdown-input");
 
     @FindBy(xpath = "//div[@id='sec-container']//a")
     public WebElement clickToContinue;
