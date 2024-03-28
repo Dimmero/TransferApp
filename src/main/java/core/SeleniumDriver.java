@@ -55,8 +55,8 @@ public class SeleniumDriver {
 
     public void runChromeDriver(boolean headless) {
         System.setProperty("webdriver.chrome.driver", CHROMEDRIVER_PATH);
-        this.driver = new ChromeDriver(getChromeOptions());
-        System.setProperty("webdriver.gecko.driver", GECKODRIVER_PATH);
+        this.driver = new ChromeDriver(getChromeOptions(headless));
+//        System.setProperty("webdriver.gecko.driver", GECKODRIVER_PATH);
 //        FirefoxOptions options = new FirefoxOptions();
 //        options.addPreference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 //        driver = new FirefoxDriver(options);
@@ -65,29 +65,29 @@ public class SeleniumDriver {
 //        this.driver1.manage().window().maximize();
     }
 
-    private ChromeOptions getChromeOptions() {
-        Proxy proxy = new Proxy();
-        String proxyAuth = USERNAME + ":" + PASSWORD;
-        proxy.setProxyType(Proxy.ProxyType.MANUAL);
-        proxy.setHttpProxy(proxyAuth + "@" + MANGOPROXY_DNS + ":" + MANGOPROXY_PORT);
-        proxy.setSslProxy(proxyAuth + "@" + MANGOPROXY_DNS + ":" + MANGOPROXY_PORT);
-
+    private ChromeOptions getChromeOptions(boolean headless) {
+//        Proxy proxy = new Proxy();
+//        String proxyAuth = USERNAME + ":" + PASSWORD;
+//        proxy.setProxyType(Proxy.ProxyType.MANUAL);
+//        proxy.setHttpProxy(proxyAuth + "@" + MANGOPROXY_DNS + ":" + MANGOPROXY_PORT);
+//        proxy.setSslProxy(proxyAuth + "@" + MANGOPROXY_DNS + ":" + MANGOPROXY_PORT);
+//
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setProxy(proxy);
+//        chromeOptions.setProxy(proxy);
 
         // Directly add arguments without creating a separate list
         chromeOptions.addArguments("--log-level=3"); // Correct log-level argument to set the verbosity
         chromeOptions.addArguments("useAutomationExtension=false"); // Correctly disable the automation extension
         chromeOptions.addArguments("--disable-extensions");
         chromeOptions.addArguments("--disable-infobars"); // Note: This argument is deprecated and may not have an effect on newer versions
-//        chromeOptions.addArguments("--headless");
+        if (headless) chromeOptions.addArguments("--headless");
         chromeOptions.addArguments("--disable-gpu");
         chromeOptions.addArguments("--no-sandbox");
         chromeOptions.addArguments("--incognito");
         chromeOptions.addArguments("--disable-application-cache");
         chromeOptions.addArguments("--disable-dev-shm-usage");
         chromeOptions.addArguments("--disable-blink-features=AutomationControlled"); // Corrected typo here
-        chromeOptions.addArguments("--remote-debugging-port=9222");
+//        chromeOptions.addArguments("--remote-debugging-port=9222");
 
         // Return the configured ChromeOptions
         return chromeOptions;

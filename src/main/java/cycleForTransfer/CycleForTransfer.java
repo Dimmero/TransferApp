@@ -37,7 +37,7 @@ public class CycleForTransfer extends BaseAbstractPage {
     }
 
     public void runCycle(ArrayList<String> list) throws TimeoutException {
-        String[] urls = {URL_TRANSFER, URL_STATS};
+        String[] urls = {URL_TRANSFER/*, URL_STATS*/};
         driver.openTabsWithUrl(urls);
         driver.getDriver().switchTo().window(tabs.get(1));
         list.forEach(tag -> {
